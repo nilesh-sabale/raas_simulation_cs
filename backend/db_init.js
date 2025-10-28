@@ -29,8 +29,40 @@ async function runMigrations(connection) {
         victim VARCHAR(255),
         amount DECIMAL(10,4) NOT NULL,
         paid BOOLEAN NOT NULL DEFAULT FALSE,
+        campaign_id VARCHAR(36),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         paid_at TIMESTAMP NULL
+      )
+    `);
+
+    // Create campaigns table
+    await connection.execute(`
+      CREATE TABLE IF NOT EXISTS campaigns (
+        id VARCHAR(36) PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        description TEXT,
+        sector VARCHAR(100),
+        size VARCHAR(50),
+        amount DECIMAL(10,4),
+        deadline INT,
+        encryption_method VARCHAR(50),
+        affiliate_id VARCHAR(100),
+        status ENUM('active', 'paused', 'completed', 'stopped') DEFAULT 'active',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Create affiliates table
+    await connection.execute(`
+      CREATE TABLE IF NOT EXISTS affiliates (
+        id VARCHAR(36) PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        success_rate DECIMAL(5,2) DEFAULT 0.00,
+        total_campaigns INT DEFAULT 0,
+        total_revenue DECIMAL(10,4) DEFAULT 0.00,
+        status ENUM('active', 'inactive', 'suspended') DEFAULT 'active',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
 

@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RaaS Simulation — Event Timeline</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Cyberpunk Matrix Background -->
+  <div class="matrix-bg"></div>
+  
+  <!-- Sidebar Navigation -->
+  <nav class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">RaaS</span>
+        <span class="logo-subtitle">SIMULATION</span>
+      </div>
+    </div>
+    
+    <div class="nav-menu">
+      <div class="nav-section">
+        <h3 class="nav-section-title">OPERATIONS</h3>
+        <a href="dashboard.html" class="nav-item">
+          <span class="nav-icon">📊</span>
+          <span class="nav-text">Dashboard</span>
+        </a>
+        <a href="campaigns.html" class="nav-item">
+          <span class="nav-icon">🎯</span>
+          <span class="nav-text">Campaigns</span>
+        </a>
+        <a href="victims.html" class="nav-item">
+          <span class="nav-icon">👥</span>
+          <span class="nav-text">Victims</span>
+        </a>
+        <a href="payments.html" class="nav-item">
+          <span class="nav-icon">💰</span>
+          <span class="nav-text">Payments</span>
+        </a>
+      </div>
+      
+      <div class="nav-section">
+        <h3 class="nav-section-title">ANALYTICS</h3>
+        <a href="network.html" class="nav-item">
+          <span class="nav-icon">🕸️</span>
+          <span class="nav-text">Network Graph</span>
+        </a>
+        <a href="timeline.html" class="nav-item active">
+          <span class="nav-icon">⏱️</span>
+          <span class="nav-text">Timeline</span>
+        </a>
+        <a href="logs.html" class="nav-item">
+          <span class="nav-icon">📋</span>
+          <span class="nav-text">Logs</span>
+        </a>
+      </div>
+      
+      <div class="nav-section">
+        <h3 class="nav-section-title">SYSTEM</h3>
+        <a href="defense.html" class="nav-item">
+          <span class="nav-icon">🛡️</span>
+          <span class="nav-text">Blue Team Mode</span>
+        </a>
+        <a href="reports.html" class="nav-item">
+          <span class="nav-icon">📄</span>
+          <span class="nav-text">Reports</span>
+        </a>
+        <a href="about.html" class="nav-item">
+          <span class="nav-icon">ℹ️</span>
+          <span class="nav-text">About</span>
+        </a>
+      </div>
+    </div>
+    
+    <!-- Role Selector -->
+    <div class="role-selector">
+      <h3 class="nav-section-title">VIEW MODE</h3>
+      <div class="role-buttons">
+        <button class="role-btn active" data-role="operator">OPERATOR</button>
+        <button class="role-btn" data-role="affiliate">AFFILIATE</button>
+        <button class="role-btn" data-role="victim">VICTIM</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Header -->
+    <header class="dashboard-header">
+      <div class="header-left">
+        <h1 class="dashboard-title">EVENT TIMELINE</h1>
+        <p class="dashboard-subtitle">SOC-style incident timeline and attack flow visualization</p>
+      </div>
+      <div class="header-right">
+        <div class="status-indicators">
+          <div class="status-item">
+            <span class="status-dot active"></span>
+            <span class="status-text">TIMELINE LIVE</span>
+          </div>
+          <div class="status-item">
+            <span class="status-dot warning"></span>
+            <span class="status-text">SIMULATION MODE</span>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-primary" onclick="refreshTimeline()">
+            <span class="btn-icon">🔄</span>
+            REFRESH
+          </button>
+          <button class="btn btn-secondary" onclick="exportTimeline()">
+            <span class="btn-icon">📊</span>
+            EXPORT
+          </button>
+          <button class="btn btn-danger" onclick="toggleDefenseMode()">
+            <span class="btn-icon">🛡️</span>
+            BLUE TEAM
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Timeline Controls -->
+    <div class="timeline-controls">
+      <div class="control-group">
+        <label for="timeline-filter">Filter by Event Type:</label>
+        <select id="timeline-filter">
+          <option value="all">All Events</option>
+          <option value="campaign">Campaigns</option>
+          <option value="encrypt">Encryption</option>
+          <option value="payment">Payments</option>
+          <option value="affiliate">Affiliate Activity</option>
+          <option value="defense">Defense Events</option>
+        </select>
+      </div>
+      
+      <div class="control-group">
+        <label for="time-range">Time Range:</label>
+        <select id="time-range">
+          <option value="1h">Last Hour</option>
+          <option value="24h" selected>Last 24 Hours</option>
+          <option value="7d">Last 7 Days</option>
+          <option value="30d">Last 30 Days</option>
+        </select>
+      </div>
+      
+      <div class="control-group">
+        <button class="btn btn-small" onclick="playTimeline()">
+          <span class="btn-icon">▶️</span>
+          PLAY TIMELINE
+        </button>
+        <button class="btn btn-small btn-secondary" onclick="pauseTimeline()">
+          <span class="btn-icon">⏸️</span>
+          PAUSE
+        </button>
+      </div>
+    </div>
+
+    <!-- Attack Flow Visualization -->
+    <div class="attack-flow">
+      <div class="section-header">
+        <h3>RANSOMWARE ATTACK FLOW</h3>
+        <div class="flow-status">
+          <span class="flow-indicator active" id="flow-status">SIMULATION ACTIVE</span>
+        </div>
+      </div>
+      
+      <div class="flow-diagram">
+        <div class="flow-step" data-step="1">
+          <div class="step-icon">🎯</div>
+          <div class="step-content">
+            <h4>Campaign Creation</h4>
+            <p>Operator creates targeting campaign</p>
+            <div class="step-stats">
+              <span class="stat">Active: 3</span>
+              <span class="stat">Total: 12</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="flow-arrow">→</div>
+        
+        <div class="flow-step" data-step="2">
+          <div class="step-icon">🤝</div>
+          <div class="step-content">
+            <h4>Affiliate Assignment</h4>
+            <p>Campaign assigned to affiliate</p>
+            <div class="step-stats">
+              <span class="stat">Active: 4</span>
+              <span class="stat">Success: 85%</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="flow-arrow">→</div>
+        
+        <div class="flow-step" data-step="3">
+          <div class="step-icon">🔒</div>
+          <div class="step-content">
+            <h4>File Encryption</h4>
+            <p>Victim files encrypted</p>
+            <div class="step-stats">
+              <span class="stat">Encrypted: 15</span>
+              <span class="stat">Success: 100%</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="flow-arrow">→</div>
+        
+        <div class="flow-step" data-step="4">
+          <div class="step-icon">💰</div>
+          <div class="step-content">
+            <h4>Payment Demand</h4>
+            <p>Ransom note delivered</p>
+            <div class="step-stats">
+              <span class="stat">Demands: 8</span>
+              <span class="stat">Paid: 3</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="flow-arrow">→</div>
+        
+        <div class="flow-step" data-step="5">
+          <div class="step-icon">🔓</div>
+          <div class="step-content">
+            <h4>Decryption</h4>
+            <p>Files restored after payment</p>
+            <div class="step-stats">
+              <span class="stat">Restored: 3</span>
+              <span class="stat">Success: 100%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timeline Events -->
+    <div class="timeline-events">
+      <div class="section-header">
+        <h3>EVENT TIMELINE</h3>
+        <div class="timeline-stats">
+          <span class="timeline-stat">Total Events: <span id="total-events">0</span></span>
+          <span class="timeline-stat">Active Threats: <span id="active-threats">0</span></span>
+        </div>
+      </div>
+      
+      <div class="timeline-container">
+        <div class="timeline-line"></div>
+        
+        <div class="timeline-events-list" id="timeline-events-list">
+          <!-- Timeline events will be populated by JavaScript -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Defense Timeline (Blue Team Mode) -->
+    <div class="defense-timeline" id="defense-timeline" style="display: none;">
+      <div class="section-header">
+        <h3>DEFENSE TIMELINE</h3>
+        <div class="defense-status">
+          <span class="defense-indicator">BLUE TEAM MODE</span>
+        </div>
+      </div>
+      
+      <div class="defense-flow">
+        <div class="defense-step" data-step="1">
+          <div class="step-icon">🔍</div>
+          <div class="step-content">
+            <h4>Detection</h4>
+            <p>EDR detects suspicious activity</p>
+            <div class="step-stats">
+              <span class="stat">Alerts: 5</span>
+              <span class="stat">Blocked: 3</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="flow-arrow">→</div>
+        
+        <div class="defense-step" data-step="2">
+          <div class="step-icon">🛡️</div>
+          <div class="step-content">
+            <h4>Containment</h4>
+            <p>Isolate affected systems</p>
+            <div class="step-stats">
+              <span class="stat">Isolated: 2</span>
+              <span class="stat">Protected: 15</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="flow-arrow">→</div>
+        
+        <div class="defense-step" data-step="3">
+          <div class="step-icon">🔧</div>
+          <div class="step-content">
+            <h4>Eradication</h4>
+            <p>Remove malware and restore</p>
+            <div class="step-stats">
+              <span class="stat">Cleaned: 2</span>
+              <span class="stat">Restored: 100%</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="flow-arrow">→</div>
+        
+        <div class="defense-step" data-step="4">
+          <div class="step-icon">📊</div>
+          <div class="step-content">
+            <h4>Recovery</h4>
+            <p>System restoration complete</p>
+            <div class="step-stats">
+              <span class="stat">Recovered: 2</span>
+              <span class="stat">Uptime: 99.9%</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="flow-arrow">→</div>
+        
+        <div class="defense-step" data-step="5">
+          <div class="step-icon">📋</div>
+          <div class="step-content">
+            <h4>Post-Incident</h4>
+            <p>Lessons learned and improvements</p>
+            <div class="step-stats">
+              <span class="stat">Reported: 1</span>
+              <span class="stat">Improved: 5</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="dashboard-footer">
+      <div class="footer-info">
+        <span class="footer-text">Educational RaaS Simulation • Safe & Non-Malicious</span>
+        <span class="footer-time" id="last-updated">Last updated: Never</span>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Scripts -->
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script src="timeline.js"></script>
+</body>
+</html>

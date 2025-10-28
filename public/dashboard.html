@@ -3,76 +3,247 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>RaaS Simulation — Dashboard</title>
+  <title>RaaS Simulation — Professional Dashboard</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
-  <nav>
-    <a href="index.html">🏠 Home</a>
-    <a href="dashboard.html" class="active">📊 Dashboard</a>
-    <a href="upload.html">🔒 Upload/Encrypt</a>
-    <a href="logs.html">📋 Logs</a>
-    <a href="about.html">ℹ️ About</a>
-  </nav>
-  <main>
-    <h1>📊 Simulation Dashboard</h1>
-    <p class="dashboard-subtitle">Real-time statistics and metrics from the educational simulation</p>
+  <!-- Cyberpunk Matrix Background -->
+  <div class="matrix-bg"></div>
+  
+  <!-- Sidebar Navigation -->
+  <nav class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">RaaS</span>
+        <span class="logo-subtitle">SIMULATION</span>
+      </div>
+    </div>
     
-    <div class="cards">
-      <div class="card">
-        <div class="card-icon">🎯</div>
-        <h3>Total Attacks (Simulated)</h3>
-        <p id="stat-attacks" class="stat-number">0</p>
-        <div class="stat-trend" id="attacks-trend">+0 this session</div>
+    <div class="nav-menu">
+      <div class="nav-section">
+        <h3 class="nav-section-title">OPERATIONS</h3>
+        <a href="dashboard.html" class="nav-item active">
+          <span class="nav-icon">📊</span>
+          <span class="nav-text">Dashboard</span>
+        </a>
+        <a href="campaigns.html" class="nav-item">
+          <span class="nav-icon">🎯</span>
+          <span class="nav-text">Campaigns</span>
+        </a>
+        <a href="victims.html" class="nav-item">
+          <span class="nav-icon">👥</span>
+          <span class="nav-text">Victims</span>
+        </a>
+        <a href="payments.html" class="nav-item">
+          <span class="nav-icon">💰</span>
+          <span class="nav-text">Payments</span>
+        </a>
       </div>
       
-      <div class="card">
-        <div class="card-icon">💰</div>
-        <h3>Payments Made</h3>
-        <p id="stat-payments" class="stat-number">0</p>
-        <div class="stat-trend" id="payments-trend">+0 this session</div>
+      <div class="nav-section">
+        <h3 class="nav-section-title">ANALYTICS</h3>
+        <a href="network.html" class="nav-item">
+          <span class="nav-icon">🕸️</span>
+          <span class="nav-text">Network Graph</span>
+        </a>
+        <a href="timeline.html" class="nav-item">
+          <span class="nav-icon">⏱️</span>
+          <span class="nav-text">Timeline</span>
+        </a>
+        <a href="logs.html" class="nav-item">
+          <span class="nav-icon">📋</span>
+          <span class="nav-text">Logs</span>
+        </a>
       </div>
       
-      <div class="card">
-        <div class="card-icon">👥</div>
-        <h3>Fake Victims</h3>
-        <p id="stat-victims" class="stat-number">0</p>
+      <div class="nav-section">
+        <h3 class="nav-section-title">SYSTEM</h3>
+        <a href="defense.html" class="nav-item">
+          <span class="nav-icon">🛡️</span>
+          <span class="nav-text">Blue Team Mode</span>
+        </a>
+        <a href="reports.html" class="nav-item">
+          <span class="nav-icon">📄</span>
+          <span class="nav-text">Reports</span>
+        </a>
+        <a href="about.html" class="nav-item">
+          <span class="nav-icon">ℹ️</span>
+          <span class="nav-text">About</span>
+        </a>
+      </div>
+    </div>
+    
+    <!-- Role Selector -->
+    <div class="role-selector">
+      <h3 class="nav-section-title">VIEW MODE</h3>
+      <div class="role-buttons">
+        <button class="role-btn active" data-role="operator">OPERATOR</button>
+        <button class="role-btn" data-role="affiliate">AFFILIATE</button>
+        <button class="role-btn" data-role="victim">VICTIM</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Header -->
+    <header class="dashboard-header">
+      <div class="header-left">
+        <h1 class="dashboard-title">OPERATIONS DASHBOARD</h1>
+        <p class="dashboard-subtitle">Real-time RaaS ecosystem simulation</p>
+      </div>
+      <div class="header-right">
+        <div class="status-indicators">
+          <div class="status-item">
+            <span class="status-dot active"></span>
+            <span class="status-text">SYSTEM ONLINE</span>
+          </div>
+          <div class="status-item">
+            <span class="status-dot warning"></span>
+            <span class="status-text">SIMULATION MODE</span>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-primary" onclick="refreshDashboard()">
+            <span class="btn-icon">🔄</span>
+            REFRESH
+          </button>
+          <button class="btn btn-secondary" onclick="exportReport()">
+            <span class="btn-icon">📊</span>
+            EXPORT
+          </button>
+          <button class="btn btn-danger" onclick="toggleDefenseMode()">
+            <span class="btn-icon">🛡️</span>
+            BLUE TEAM
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Live Activity Ticker -->
+    <div class="activity-ticker">
+      <div class="ticker-content" id="activity-ticker">
+        <span class="ticker-item">[LIVE] Campaign Alpha launched targeting enterprise sector</span>
+        <span class="ticker-item">[LIVE] Payment received from victim-001: 0.05 BTC</span>
+        <span class="ticker-item">[LIVE] New affiliate registered: affiliate-042</span>
+        <span class="ticker-item">[LIVE] Encryption simulation completed on 15 files</span>
+      </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-icon">🎯</span>
+          <span class="stat-label">ACTIVE CAMPAIGNS</span>
+        </div>
+        <div class="stat-value" id="stat-campaigns">0</div>
+        <div class="stat-trend" id="campaigns-trend">+0 this session</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-icon">💰</span>
+          <span class="stat-label">TOTAL REVENUE</span>
+        </div>
+        <div class="stat-value" id="stat-revenue">0.0000 BTC</div>
+        <div class="stat-trend" id="revenue-trend">+0.0000 this session</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-icon">👥</span>
+          <span class="stat-label">AFFECTED SYSTEMS</span>
+        </div>
+        <div class="stat-value" id="stat-victims">0</div>
         <div class="stat-trend" id="victims-trend">+0 this session</div>
       </div>
       
-      <div class="card">
-        <div class="card-icon">🤝</div>
-        <h3>Affiliates</h3>
-        <p id="stat-affiliates" class="stat-number">0</p>
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-icon">🤝</span>
+          <span class="stat-label">ACTIVE AFFILIATES</span>
+        </div>
+        <div class="stat-value" id="stat-affiliates">0</div>
         <div class="stat-trend" id="affiliates-trend">+0 this session</div>
       </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="charts-section">
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3>INFECTION TREND</h3>
+          <div class="chart-controls">
+            <select id="timeframe-select">
+              <option value="24h">Last 24 Hours</option>
+              <option value="7d">Last 7 Days</option>
+              <option value="30d">Last 30 Days</option>
+            </select>
+          </div>
+        </div>
+        <canvas id="infection-chart"></canvas>
+      </div>
       
-      <div class="card">
-        <div class="card-icon">👨‍💻</div>
-        <h3>Developers</h3>
-        <p id="stat-developers" class="stat-number">0</p>
-        <div class="stat-trend" id="developers-trend">+0 this session</div>
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3>REVENUE DISTRIBUTION</h3>
+        </div>
+        <canvas id="revenue-chart"></canvas>
       </div>
     </div>
-    
-    <div class="dashboard-actions">
-      <button onclick="refreshStats()" class="refresh-btn">
-        <span class="btn-icon">🔄</span>
-        Refresh Statistics
-      </button>
-      <button onclick="exportData()" class="export-btn">
-        <span class="btn-icon">📊</span>
-        Export Data
-      </button>
+
+    <!-- Network Overview -->
+    <div class="network-overview">
+      <div class="section-header">
+        <h3>NETWORK OVERVIEW</h3>
+        <button class="btn btn-small" onclick="refreshNetwork()">REFRESH</button>
+      </div>
+      <div class="network-stats">
+        <div class="network-stat">
+          <span class="network-label">Infected Nodes:</span>
+          <span class="network-value" id="network-nodes">0</span>
+        </div>
+        <div class="network-stat">
+          <span class="network-label">Active Connections:</span>
+          <span class="network-value" id="network-connections">0</span>
+        </div>
+        <div class="network-stat">
+          <span class="network-label">Geographic Spread:</span>
+          <span class="network-value" id="network-countries">0</span>
+        </div>
+      </div>
+      <div class="network-graph" id="network-graph"></div>
     </div>
-    
-    <div class="last-updated">
-      <span id="last-updated">Last updated: Never</span>
+
+    <!-- Recent Activity -->
+    <div class="recent-activity">
+      <div class="section-header">
+        <h3>RECENT ACTIVITY</h3>
+        <button class="btn btn-small" onclick="loadRecentActivity()">REFRESH</button>
+      </div>
+      <div class="activity-list" id="activity-list">
+        <!-- Activity items will be populated by JavaScript -->
+      </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="dashboard-footer">
+      <div class="footer-info">
+        <span class="footer-text">Educational RaaS Simulation • Safe & Non-Malicious</span>
+        <span class="footer-time" id="last-updated">Last updated: Never</span>
+      </div>
+    </footer>
   </main>
-  <script src="script.js" defer></script>
+
+  <!-- Scripts -->
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script src="dashboard.js"></script>
 </body>
 </html>
