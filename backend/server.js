@@ -14,9 +14,12 @@ const io = new Server(server, {
   cors: {
     origin: "*",
     methods: ["GET", "POST"]
-  }
+  },
+  pingTimeout: 30000,
+  pingInterval: 25000,
+  transports: ['websocket', 'polling']
 });
-const PORT = process.env.PORT || 3000;
+let PORT = Number(process.env.PORT || 3000);
 
 const dbConfig = {
   host: process.env.DB_HOST || 'localhost',
@@ -107,6 +110,7 @@ app.post('/api/payment/create', async (req, res) => {
       return result.insertId;
     });
     await logEvent('payment_create', `Payment #${result} created for ${victim} amount ${amount}`);
+    try { io.emit('payments-updated', { id: result, victim, amount, status: 'created' }); } catch {}
     res.json({ id: result, victim, amount, address: `FAKE-CRYPTO-ADDRESS-${result}` });
   } catch (error) {
     console.error('Error creating payment:', error);
@@ -122,6 +126,7 @@ app.post('/api/payment/mark-paid', async (req, res) => {
       await connection.execute("UPDATE payments SET paid = 1, paid_at = NOW() WHERE id = ?", [id]);
     });
     await logEvent('payment_paid', `Payment #${id} marked paid`);
+    try { io.emit('payments-updated', { id, status: 'paid' }); } catch {}
     res.json({ id, paid: true });
   } catch (error) {
     console.error('Error marking payment as paid:', error);
@@ -145,12 +150,14 @@ app.post('/api/encrypt', upload.single('file'), async (req, res) => {
   // create a fake ransom demand
   const amount = (Math.random() * 0.05 + 0.01).toFixed(4);
   try {
+    const victimId = req.headers['x-victim-id'] || 'demo_victim';
     const paymentId = await withDb(async (connection) => {
-      const [result] = await connection.execute('INSERT INTO payments (victim, amount) VALUES (?, ?)', ['demo_victim', amount]);
+      const [result] = await connection.execute('INSERT INTO payments (victim, amount) VALUES (?, ?)', [victimId, amount]);
       return result.insertId;
     });
     await logEvent('encrypt', `File encrypted using ${method}; payment #${paymentId} demanded = ${amount}`);
-    res.json({ method, encoded, ransom: { payment_id: paymentId, amount, address: `FAKE-CRYPTO-ADDRESS-${paymentId}` } });
+    try { io.emit('payments-updated', { id: paymentId, victim: victimId, amount, status: 'created' }); } catch {}
+    res.json({ method, encoded, ransom: { payment_id: paymentId, amount, address: `FAKE-CRYPTO-ADDRESS-${paymentId}`, victim: victimId } });
   } catch (error) {
     console.error('Error processing encryption:', error);
     res.status(500).json({ error: 'db_error' });
@@ -208,7 +215,8 @@ app.post('/api/campaigns/create', async (req, res) => {
       id: campaignId,
       name,
       sector,
-      status: 'active'
+      status: 'active',
+      affiliate_id: affiliate
     });
     
     res.json({ id: campaignId, success: true });
@@ -221,16 +229,26 @@ app.post('/api/campaigns/create', async (req, res) => {
 app.get('/api/campaigns', async (req, res) => {
   try {
     const campaigns = await withDb(async (connection) => {
-      const [rows] = await connection.execute(`
-        SELECT c.*, 
-               COUNT(p.id) as victim_count,
-               SUM(CASE WHEN p.paid = 1 THEN p.amount ELSE 0 END) as revenue
-        FROM campaigns c
-        LEFT JOIN payments p ON c.id = p.campaign_id
-        GROUP BY c.id
-        ORDER BY c.created_at DESC
-      `);
-      return rows;
+      try {
+        const [rows] = await connection.execute(`
+          SELECT c.*, 
+                 COUNT(p.id) as victim_count,
+                 SUM(CASE WHEN p.paid = 1 THEN p.amount ELSE 0 END) as revenue
+          FROM campaigns c
+          LEFT JOIN payments p ON c.id = p.campaign_id
+          GROUP BY c.id
+          ORDER BY c.created_at DESC
+        `);
+        return rows;
+      } catch (e) {
+        // Fallback if campaign_id column doesn't exist yet
+        const [rows] = await connection.execute(`
+          SELECT c.*, 0 as victim_count, 0 as revenue
+          FROM campaigns c
+          ORDER BY c.created_at DESC
+        `);
+        return rows;
+      }
     });
     res.json(campaigns);
   } catch (error) {
@@ -305,7 +323,21 @@ setInterval(() => {
   });
 }, 5000);
 
-server.listen(PORT, () => {
-  console.log(`RaaS educational simulation running on http://localhost:${PORT}`);
-  console.log(`Socket.IO server initialized`);
-});
+function tryListen(port, attemptsLeft = 10) {
+  server.listen(port, () => {
+    PORT = port;
+    console.log(`RaaS educational simulation running on http://localhost:${PORT}`);
+    console.log(`Socket.IO server initialized`);
+  }).on('error', (err) => {
+    if (err && err.code === 'EADDRINUSE' && attemptsLeft > 0) {
+      const nextPort = port + 1;
+      console.warn(`Port ${port} in use, retrying on ${nextPort}...`);
+      setTimeout(() => tryListen(nextPort, attemptsLeft - 1), 200);
+    } else {
+      console.error('Failed to start server:', err);
+      process.exit(1);
+    }
+  });
+}
+
+tryListen(PORT);

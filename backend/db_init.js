@@ -35,6 +35,17 @@ async function runMigrations(connection) {
       )
     `);
 
+    // Ensure campaign_id exists on older databases
+    try {
+      const [cols] = await connection.execute(`
+        SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS 
+        WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'payments' AND COLUMN_NAME = 'campaign_id'
+      `);
+      if (!cols || cols.length === 0) {
+        await connection.execute(`ALTER TABLE payments ADD COLUMN campaign_id VARCHAR(36) NULL`);
+      }
+    } catch {}
+
     // Create campaigns table
     await connection.execute(`
       CREATE TABLE IF NOT EXISTS campaigns (

@@ -36,6 +36,10 @@
           <span class="nav-icon">🎯</span>
           <span class="nav-text">Campaigns</span>
         </a>
+        <a href="upload.html" class="nav-item">
+          <span class="nav-icon">🔒</span>
+          <span class="nav-text">Upload/Encrypt</span>
+        </a>
         <a href="victims.html" class="nav-item">
           <span class="nav-icon">👥</span>
           <span class="nav-text">Victims</span>
@@ -108,6 +112,10 @@
             <span class="status-dot warning"></span>
             <span class="status-text">SIMULATION MODE</span>
           </div>
+        <a class="status-item" id="victim-banner" style="display:none; text-decoration:none;" href="payments.html">
+          <span class="status-dot danger"></span>
+          <span class="status-text">YOUR SYSTEM IS ENCRYPTED — GO TO PAYMENTS</span>
+        </a>
         </div>
         <div class="header-actions">
           <button class="btn btn-primary" onclick="refreshDashboard()">
@@ -245,5 +253,6 @@
   <!-- Scripts -->
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
   <script src="dashboard.js"></script>
+  <script src="demo.js"></script>
 </body>
 </html>

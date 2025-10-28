@@ -103,12 +103,13 @@ class CampaignBuilder {
   }
 
   showAffiliateView() {
-    // Hide operator-specific elements
+    // Hide builder-only sections
     document.querySelectorAll('.builder-section').forEach(section => {
-      if (section.classList.contains('preview-section')) {
-        section.style.display = 'none';
-      }
+      section.style.display = 'none';
     });
+
+    // Render assignments in campaigns grid
+    this.renderAffiliateAssignments();
   }
 
   showVictimView() {
@@ -148,6 +149,7 @@ class CampaignBuilder {
             <div class="victim-actions">
               <button class="btn btn-danger" onclick="simulatePayment()">SIMULATE PAYMENT</button>
               <button class="btn btn-secondary" onclick="simulateNegotiation()">NEGOTIATE</button>
+              <a class="btn btn-secondary" href="payments.html">GO TO PAYMENTS</a>
             </div>
           </div>
         </div>
@@ -157,38 +159,33 @@ class CampaignBuilder {
 
   async loadActiveCampaigns() {
     try {
-      // Simulate loading campaigns
-      const mockCampaigns = [
-        {
-          id: 'camp-001',
-          name: 'Healthcare Beta',
-          sector: 'Healthcare',
-          status: 'active',
-          victims: 12,
-          revenue: 0.45,
-          created: '2024-01-15'
-        },
-        {
-          id: 'camp-002',
-          name: 'Finance Gamma',
-          sector: 'Financial Services',
-          status: 'completed',
-          victims: 8,
-          revenue: 0.32,
-          created: '2024-01-10'
-        },
-        {
-          id: 'camp-003',
-          name: 'Education Delta',
-          sector: 'Education',
-          status: 'paused',
-          victims: 5,
-          revenue: 0.18,
-          created: '2024-01-08'
-        }
-      ];
+      // Prefer backend campaigns; fallback to mock
+      let rows = [];
+      try {
+        const res = await fetch('/api/campaigns');
+        if (res.ok) rows = await res.json();
+      } catch {}
 
-      this.campaigns = mockCampaigns;
+      if (!rows || rows.length === 0) {
+        rows = [
+          { id: 'camp-001', name: 'Healthcare Beta', sector: 'Healthcare', status: 'active', victims: 12, revenue: 0.45, created: '2024-01-15', affiliate_id: 'affiliate-002', success_rate: 0.92 },
+          { id: 'camp-002', name: 'Finance Gamma', sector: 'Financial Services', status: 'completed', victims: 8, revenue: 0.32, created: '2024-01-10', affiliate_id: 'affiliate-001', success_rate: 0.85 },
+          { id: 'camp-003', name: 'Education Delta', sector: 'Education', status: 'paused', victims: 5, revenue: 0.18, created: '2024-01-08', affiliate_id: 'affiliate-002', success_rate: 0.78 }
+        ];
+      }
+
+      // Normalize
+      this.campaigns = rows.map(r => ({
+        id: r.id,
+        name: r.name,
+        sector: r.sector || 'N/A',
+        status: r.status || 'active',
+        victims: Number(r.victim_count ?? r.victims ?? 0),
+        revenue: Number(r.revenue ?? 0),
+        created: r.created_at || r.created || new Date().toISOString(),
+        affiliate_id: r.affiliate_id || 'affiliate-002',
+        success_rate: Number(r.success_rate ?? 0.9)
+      }));
       this.renderCampaigns();
     } catch (error) {
       console.error('Failed to load campaigns:', error);
@@ -230,6 +227,57 @@ class CampaignBuilder {
         </div>
       </div>
     `).join('');
+  }
+
+  renderAffiliateAssignments() {
+    const campaignsGrid = document.getElementById('campaigns-grid');
+    if (!campaignsGrid) return;
+
+    const myAffiliateId = 'affiliate-002'; // demo affiliate
+    const assigned = this.campaigns.filter(c => (c.affiliate_id || '') === myAffiliateId);
+
+    campaignsGrid.innerHTML = `
+      <div class="campaign-card" style="grid-column: 1 / -1;">
+        <div class="campaign-header">
+          <h5>Assigned to You (${myAffiliateId})</h5>
+          <span class="campaign-status active">AFFILIATE VIEW</span>
+        </div>
+        <div class="campaign-stats">
+          <div class="stat"><span class="stat-label">Total Assigned:</span><span class="stat-value">${assigned.length}</span></div>
+          <div class="stat"><span class="stat-label">Avg Success:</span><span class="stat-value">${assigned.length ? Math.round(assigned.reduce((a,c)=>a+(c.success_rate||0),0)/assigned.length*100) : 0}%</span></div>
+          <div class="stat"><span class="stat-label">Revenue (paid):</span><span class="stat-value">${assigned.reduce((a,c)=>a+(c.revenue||0),0).toFixed(2)} BTC</span></div>
+        </div>
+      </div>
+      ${assigned.length === 0 ? `
+        <div class="campaign-card" style="grid-column: 1 / -1;">
+          <div class="campaign-header">
+            <h5>No assignments yet</h5>
+            <span class="campaign-status paused">WAITING</span>
+          </div>
+          <div class="campaign-stats">
+            <div class="stat"><span class="stat-label">Tip:</span><span class="stat-value">Have Operator assign you and click REFRESH</span></div>
+          </div>
+        </div>
+      ` : ''}
+      ${assigned.map(c => `
+        <div class="campaign-card">
+          <div class="campaign-header">
+            <h5>${c.name}</h5>
+            <span class="campaign-status ${c.status}">${c.status.toUpperCase()}</span>
+          </div>
+          <div class="campaign-stats">
+            <div class="stat"><span class="stat-label">Sector:</span><span class="stat-value">${c.sector}</span></div>
+            <div class="stat"><span class="stat-label">Victims:</span><span class="stat-value">${c.victims}</span></div>
+            <div class="stat"><span class="stat-label">Success:</span><span class="stat-value">${Math.round((c.success_rate||0)*100)}%</span></div>
+            <div class="stat"><span class="stat-label">Revenue:</span><span class="stat-value">${(c.revenue||0).toFixed(2)} BTC</span></div>
+          </div>
+          <div class="campaign-actions">
+            <button class="btn btn-small" onclick="viewCampaign('${c.id}')">VIEW</button>
+            <button class="btn btn-small btn-secondary" onclick="simulateAffiliateRun('${c.id}')">RUN</button>
+          </div>
+        </div>
+      `).join('')}
+    `;
   }
 
   generateRansomNote(template) {
@@ -336,35 +384,40 @@ function launchCampaign() {
   const form = document.getElementById('campaign-form');
   const formData = new FormData(form);
   
-  // Validate required fields
   const requiredFields = ['name', 'sector', 'size', 'amount', 'deadline'];
   const missingFields = requiredFields.filter(field => !formData.get(field));
-  
   if (missingFields.length > 0) {
     campaignBuilder.showNotification(`Please fill in: ${missingFields.join(', ')}`, 'error');
     return;
   }
-  
-  // Simulate campaign launch
-  campaignBuilder.showNotification('Campaign launched successfully!', 'success');
-  
-  // Add to campaigns list
-  const newCampaign = {
-    id: `camp-${Date.now()}`,
+
+  const payload = {
     name: formData.get('name'),
+    description: formData.get('description') || '',
     sector: formData.get('sector'),
-    status: 'active',
-    victims: 0,
-    revenue: 0,
-    created: new Date().toISOString().split('T')[0]
+    size: formData.get('size'),
+    amount: Number(formData.get('amount')),
+    deadline: Number(formData.get('deadline')),
+    encryption: document.getElementById('encryption-method')?.value || 'base64',
+    affiliate: document.getElementById('affiliate-select')?.value || 'affiliate-002'
   };
-  
-  campaignBuilder.campaigns.unshift(newCampaign);
-  campaignBuilder.renderCampaigns();
-  
-  // Reset form
-  form.reset();
-  campaignBuilder.updatePreview();
+
+  fetch('/api/campaigns/create', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+  .then(async (res) => {
+    if (!res.ok) throw new Error('create_failed');
+    const data = await res.json();
+    campaignBuilder.showNotification('Campaign launched successfully!', 'success');
+    // Reload campaigns from backend so Affiliate view sees it
+    campaignBuilder.loadActiveCampaigns();
+    form.reset();
+    campaignBuilder.updatePreview();
+  })
+  .catch(() => {
+    campaignBuilder.showNotification('Failed to launch campaign', 'error');
+  });
 }
 
 function saveCampaign() {
@@ -443,3 +496,7 @@ let campaignBuilder;
 document.addEventListener('DOMContentLoaded', () => {
   campaignBuilder = new CampaignBuilder();
 });
+
+function simulateAffiliateRun(id) {
+  campaignBuilder.showNotification(`Affiliate run triggered for ${id}`, 'success');
+}

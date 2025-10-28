@@ -5,24 +5,128 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>RaaS Simulation — Logs</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="upload.html">Upload/Encrypt</a>
-    <a href="logs.html" class="active">Logs</a>
-    <a href="about.html">About</a>
+  <div class="matrix-bg"></div>
+
+  <nav class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">RaaS</span>
+        <span class="logo-subtitle">SIMULATION</span>
+      </div>
+    </div>
+
+    <div class="nav-menu">
+      <div class="nav-section">
+        <h3 class="nav-section-title">OPERATIONS</h3>
+        <a href="dashboard.html" class="nav-item">
+          <span class="nav-icon">📊</span>
+          <span class="nav-text">Dashboard</span>
+        </a>
+        <a href="campaigns.html" class="nav-item">
+          <span class="nav-icon">🎯</span>
+          <span class="nav-text">Campaigns</span>
+        </a>
+        <a href="upload.html" class="nav-item">
+          <span class="nav-icon">🔒</span>
+          <span class="nav-text">Upload/Encrypt</span>
+        </a>
+        <a href="victims.html" class="nav-item">
+          <span class="nav-icon">👥</span>
+          <span class="nav-text">Victims</span>
+        </a>
+        <a href="payments.html" class="nav-item">
+          <span class="nav-icon">💰</span>
+          <span class="nav-text">Payments</span>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <h3 class="nav-section-title">ANALYTICS</h3>
+        <a href="network.html" class="nav-item">
+          <span class="nav-icon">🕸️</span>
+          <span class="nav-text">Network Graph</span>
+        </a>
+        <a href="timeline.html" class="nav-item">
+          <span class="nav-icon">⏱️</span>
+          <span class="nav-text">Timeline</span>
+        </a>
+        <a href="logs.html" class="nav-item active">
+          <span class="nav-icon">📋</span>
+          <span class="nav-text">Logs</span>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <h3 class="nav-section-title">SYSTEM</h3>
+        <a href="defense.html" class="nav-item">
+          <span class="nav-icon">🛡️</span>
+          <span class="nav-text">Blue Team Mode</span>
+        </a>
+        <a href="reports.html" class="nav-item">
+          <span class="nav-icon">📄</span>
+          <span class="nav-text">Reports</span>
+        </a>
+        <a href="about.html" class="nav-item">
+          <span class="nav-icon">ℹ️</span>
+          <span class="nav-text">About</span>
+        </a>
+      </div>
+    </div>
   </nav>
-  <main>
-    <h1>Logs</h1>
-    <table class="logs">
-      <thead>
-        <tr><th>Time</th><th>Type</th><th>Message</th></tr>
-      </thead>
-      <tbody id="logs-body"></tbody>
-    </table>
+
+  <main class="main-content">
+    <header class="dashboard-header">
+      <div class="header-left">
+        <h1 class="dashboard-title">ACTIVITY LOGS</h1>
+        <p class="dashboard-subtitle">System and simulation events</p>
+      </div>
+      <div class="header-right">
+        <div class="status-indicators">
+          <div class="status-item">
+            <span class="status-dot active"></span>
+            <span class="status-text">LOGS LIVE</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="active-campaigns">
+      <div class="section-header">
+        <h3>RECENT EVENTS</h3>
+        <button class="btn btn-small" onclick="loadLogs()">REFRESH</button>
+      </div>
+      <div class="campaigns-grid" style="grid-template-columns: 1fr;">
+        <div class="campaign-card" style="grid-column: 1 / -1;">
+          <div class="campaign-header">
+            <h5>System Log</h5>
+            <span class="campaign-status active">LIVE</span>
+          </div>
+          <div class="campaign-stats" style="width:100%;">
+            <table class="table" style="width:100%;">
+              <thead>
+                <tr><th>Time</th><th>Type</th><th>Message</th></tr>
+              </thead>
+              <tbody id="logs-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="dashboard-footer">
+      <div class="footer-info">
+        <span class="footer-text">Educational RaaS Simulation • Safe & Non-Malicious</span>
+        <span class="footer-time" id="last-updated">Last updated: Never</span>
+      </div>
+    </footer>
   </main>
+
   <script src="script.js" defer></script>
 </body>
 </html>

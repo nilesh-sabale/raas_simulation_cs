@@ -167,6 +167,7 @@ class RaaSDashboard {
       const stats = await this.fetchJSON('/api/stats');
       this.updateStats(stats);
       this.updateTrends(stats);
+      this.updateVictimBanner();
       
       // Update charts with new data
       if (this.charts.infection) {
@@ -392,6 +393,17 @@ class RaaSDashboard {
     } catch (error) {
       console.error('Failed to load recent activity:', error);
     }
+  }
+
+  // When a victim is encrypted, show prominent banner until paid
+  updateVictimBanner() {
+    const banner = document.getElementById('victim-banner');
+    if (!banner) return;
+    // Heuristic: unpaid payments exist
+    fetch('/api/payments').then(r=>r.json()).then(rows => {
+      const hasUnpaid = rows.some(p => !p.paid);
+      banner.style.display = hasUnpaid ? 'flex' : 'none';
+    }).catch(()=>{});
   }
 
   // Get activity icon based on type

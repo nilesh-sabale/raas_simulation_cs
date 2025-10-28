@@ -120,6 +120,24 @@ class TimelineManager {
     this.updateTimelineStats();
   }
 
+  addEncryptEventForVictim(victim, paymentId) {
+    this.addTimelineEvent({
+      type: 'encrypt',
+      message: `Files encrypted on ${victim}. Ransom demand #${paymentId}.`,
+      timestamp: new Date().toISOString(),
+      icon: this.getEventIcon('encrypt')
+    });
+  }
+
+  addPaidEvent(paymentId) {
+    this.addTimelineEvent({
+      type: 'payment_paid',
+      message: `Payment #${paymentId} marked as paid. Decryption started.`,
+      timestamp: new Date().toISOString(),
+      icon: this.getEventIcon('payment_paid')
+    });
+  }
+
   renderTimelineEvents() {
     const container = document.getElementById('timeline-events-list');
     if (!container) return;

@@ -152,7 +152,7 @@ function initUploadForm() {
     e.preventDefault();
     const fd = new FormData(form);
     try {
-      const res = await fetch('/api/encrypt', { method: 'POST', body: fd });
+      const res = await fetch('/api/encrypt', { method: 'POST', headers: { 'X-Victim-Id': 'victim-001' }, body: fd });
       if (!res.ok) throw new Error('encrypt_failed');
       const data = await res.json();
       qs('#encrypt-result').classList.remove('hidden');
