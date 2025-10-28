@@ -1,0 +1,16 @@
+# Node
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# DB
+*.db
+*.db-journal
+
+# OS
+.DS_Store
+Thumbs.db

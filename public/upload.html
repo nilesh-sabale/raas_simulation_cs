@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RaaS Simulation — Upload/Encrypt</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="upload.html" class="active">Upload/Encrypt</a>
+    <a href="logs.html">Logs</a>
+    <a href="about.html">About</a>
+  </nav>
+  <main>
+    <h1>Upload and Simulate Encryption</h1>
+    <form id="encrypt-form">
+      <label>File (text only): <input type="file" name="file" accept=".txt,text/plain" required /></label>
+      <label>Method:
+        <select name="method">
+          <option value="base64">Base64</option>
+          <option value="caesar">Caesar Cipher</option>
+        </select>
+      </label>
+      <label>Shift (Caesar): <input type="number" name="shift" value="3" /></label>
+      <button type="submit">Encrypt</button>
+    </form>
+
+    <section id="encrypt-result" class="hidden">
+      <h2>Encoded Content</h2>
+      <textarea id="encoded" rows="8" readonly></textarea>
+      <div id="ransom-info"></div>
+      <h3>Decrypt</h3>
+      <form id="decrypt-form">
+        <input type="hidden" name="method" />
+        <input type="hidden" name="shift" />
+        <label>Encoded Content:
+          <textarea name="content" rows="8" required></textarea>
+        </label>
+        <button type="submit">Decrypt</button>
+      </form>
+      <div id="decoded-box" class="hidden">
+        <h4>Decoded Content</h4>
+        <pre id="decoded"></pre>
+      </div>
+    </section>
+  </main>
+  <script src="script.js" defer></script>
+</body>
+</html>

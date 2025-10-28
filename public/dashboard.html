@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RaaS Simulation — Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav>
+    <a href="index.html">🏠 Home</a>
+    <a href="dashboard.html" class="active">📊 Dashboard</a>
+    <a href="upload.html">🔒 Upload/Encrypt</a>
+    <a href="logs.html">📋 Logs</a>
+    <a href="about.html">ℹ️ About</a>
+  </nav>
+  <main>
+    <h1>📊 Simulation Dashboard</h1>
+    <p class="dashboard-subtitle">Real-time statistics and metrics from the educational simulation</p>
+    
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">🎯</div>
+        <h3>Total Attacks (Simulated)</h3>
+        <p id="stat-attacks" class="stat-number">0</p>
+        <div class="stat-trend" id="attacks-trend">+0 this session</div>
+      </div>
+      
+      <div class="card">
+        <div class="card-icon">💰</div>
+        <h3>Payments Made</h3>
+        <p id="stat-payments" class="stat-number">0</p>
+        <div class="stat-trend" id="payments-trend">+0 this session</div>
+      </div>
+      
+      <div class="card">
+        <div class="card-icon">👥</div>
+        <h3>Fake Victims</h3>
+        <p id="stat-victims" class="stat-number">0</p>
+        <div class="stat-trend" id="victims-trend">+0 this session</div>
+      </div>
+      
+      <div class="card">
+        <div class="card-icon">🤝</div>
+        <h3>Affiliates</h3>
+        <p id="stat-affiliates" class="stat-number">0</p>
+        <div class="stat-trend" id="affiliates-trend">+0 this session</div>
+      </div>
+      
+      <div class="card">
+        <div class="card-icon">👨‍💻</div>
+        <h3>Developers</h3>
+        <p id="stat-developers" class="stat-number">0</p>
+        <div class="stat-trend" id="developers-trend">+0 this session</div>
+      </div>
+    </div>
+    
+    <div class="dashboard-actions">
+      <button onclick="refreshStats()" class="refresh-btn">
+        <span class="btn-icon">🔄</span>
+        Refresh Statistics
+      </button>
+      <button onclick="exportData()" class="export-btn">
+        <span class="btn-icon">📊</span>
+        Export Data
+      </button>
+    </div>
+    
+    <div class="last-updated">
+      <span id="last-updated">Last updated: Never</span>
+    </div>
+  </main>
+  <script src="script.js" defer></script>
+</body>
+</html>

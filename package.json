@@ -1,0 +1,25 @@
+{
+  "name": "raas-simulation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Educational, safe simulation of Ransomware-as-a-Service using Node.js, Express, and SQLite (no real malware).",
+  "license": "MIT",
+  "scripts": {
+    "start": "node backend/server.js",
+    "init-db": "node backend/db_init.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.6.5",
+    "dotenv": "^16.3.1",
+    "socket.io": "^4.7.5",
+    "pdfkit": "^0.14.0",
+    "chart.js": "^4.4.0",
+    "d3": "^7.8.5",
+    "uuid": "^9.0.1"
+  }
+}
