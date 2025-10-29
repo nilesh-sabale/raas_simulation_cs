@@ -6,9 +6,9 @@ import {
     Payment,
     ActivityLog,
     User
-} from '@/types'
-import { apiService } from '@services/api'
-import { websocketService } from '@services/websocket'
+} from '../types'
+import { apiService } from '../services/api'
+import { websocketService } from '../services/websocket'
 import { toast } from 'react-hot-toast'
 
 interface AppStore {

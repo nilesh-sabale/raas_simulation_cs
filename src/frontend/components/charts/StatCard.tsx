@@ -73,16 +73,32 @@ const CardHeader = styled.div`
 `
 
 const IconContainer = styled.div`
-  font-size: 1.25rem;
-  color: var(--color-primary);
+  font-size: 1.5rem;
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
-  background: rgba(37, 99, 235, 0.1);
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(37, 99, 235, 0.2);
+  width: 56px;
+  height: 56px;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: var(--gradient-primary);
+    border-radius: var(--radius-lg);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+  }
+  
+  &:hover::before {
+    opacity: 0.3;
+  }
 `
 
 const CardTitle = styled.div`
@@ -95,20 +111,20 @@ const CardTitle = styled.div`
 `
 
 const CardValue = styled.div<{ $loading: boolean }>`
-  font-size: 2.5rem;
+  font-size: 2.75rem;
   font-weight: 800;
-  color: var(--color-primary);
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: var(--spacing-sm);
-  text-shadow: 0 0 20px var(--shadow-glow);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: -0.02em;
   
   ${props => props.$loading && `
-    background: linear-gradient(90deg, var(--color-primary) 25%, transparent 50%, var(--color-primary) 75%);
+    background: linear-gradient(90deg, var(--gradient-primary) 25%, transparent 50%, var(--gradient-primary) 75%);
     background-size: 200% 100%;
     animation: shimmer 2s infinite;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
   `}
   
   @keyframes shimmer {

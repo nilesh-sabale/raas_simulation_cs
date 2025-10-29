@@ -28,15 +28,16 @@ const getVariantStyles = (variant: string) => {
     case 'elevated':
       return css`
         background: var(--gradient-card);
-        border: 1px solid var(--border);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-        backdrop-filter: blur(25px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: var(--shadow-xl);
+        backdrop-filter: blur(30px);
       `
     default:
       return css`
         background: var(--gradient-card);
-        border: 1px solid var(--border);
-        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(25px);
+        box-shadow: var(--shadow-lg);
       `
   }
 }
@@ -60,11 +61,24 @@ const StyledCard = styled(motion.div) <{
   $hover: boolean
   $clickable: boolean
 }>`
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   transition: var(--transition-normal);
   position: relative;
   overflow: hidden;
   cursor: ${props => props.$clickable ? 'pointer' : 'default'};
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: var(--gradient-glow);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+    z-index: -1;
+  }
   
   ${props => getVariantStyles(props.$variant)}
   ${props => getPaddingStyles(props.$padding)}
@@ -83,12 +97,16 @@ const StyledCard = styled(motion.div) <{
     }
     
     &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 20px 40px var(--shadow);
-      border-color: var(--color-primary);
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-xl), var(--shadow-glow);
+      border-color: rgba(99, 102, 241, 0.5);
       
       &::before {
         transform: scaleX(1);
+      }
+      
+      &::after {
+        opacity: 0.05;
       }
     }
   `}

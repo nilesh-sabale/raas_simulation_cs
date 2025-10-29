@@ -1,18 +1,31 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import styled from 'styled-components'
 import { Target, DollarSign, Users, UserCheck, RefreshCw, Activity, TrendingUp, Database } from 'lucide-react'
-import { useAppStore } from '@store/appStore'
-import { useWebSocket, useStatsUpdates } from '@hooks/useWebSocket'
-import { StatCard } from '@components/charts/StatCard'
-import { LineChart } from '@components/charts/LineChart'
-import { PieChart } from '@components/charts/PieChart'
-import { Button } from '@components/common/Button'
-import { Card } from '@components/common/Card'
+import { useAppStore } from '../../store/appStore'
+import { useWebSocket, useStatsUpdates } from '../../hooks/useWebSocket'
+import { StatCard } from '../../components/charts/StatCard'
+import { LineChart } from '../../components/charts/LineChart'
+import { PieChart } from '../../components/charts/PieChart'
+import { Button } from '../../components/common/Button'
+import { Card } from '../../components/common/Card'
 
 const DashboardContainer = styled.div`
   padding: var(--spacing-xl);
   min-height: calc(100vh - var(--header-height));
-  background: var(--gradient-bg);
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--gradient-glow);
+    opacity: 0.1;
+    z-index: -1;
+    animation: glowPulse 8s ease-in-out infinite;
+  }
   
   @media (max-width: 768px) {
     padding: var(--spacing-lg);
@@ -34,19 +47,25 @@ const DashboardHeader = styled.div`
 
 const HeaderInfo = styled.div`
   h1 {
-    font-size: 2.25rem;
-    font-weight: 700;
-    color: var(--text-primary);
+    font-size: 3rem;
+    font-weight: 800;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     margin-bottom: var(--spacing-sm);
     display: flex;
     align-items: center;
     gap: var(--spacing-md);
+    letter-spacing: -0.02em;
+    animation: modernPulse 4s ease-in-out infinite;
   }
   
   p {
     color: var(--text-secondary);
-    font-size: 1rem;
-    font-weight: 400;
+    font-size: 1.125rem;
+    font-weight: 500;
+    opacity: 0.9;
   }
 `
 
@@ -76,9 +95,19 @@ const ConnectionStatus = styled.div<{ $connected: boolean }>`
 
 const StatsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: var(--spacing-lg);
-  margin-bottom: var(--spacing-xl);
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--spacing-xl);
+  margin-bottom: var(--spacing-xxl);
+  
+  & > * {
+    animation: slideInUp 0.6s ease-out;
+    animation-fill-mode: both;
+  }
+  
+  & > *:nth-child(1) { animation-delay: 0.1s; }
+  & > *:nth-child(2) { animation-delay: 0.2s; }
+  & > *:nth-child(3) { animation-delay: 0.3s; }
+  & > *:nth-child(4) { animation-delay: 0.4s; }
 `
 
 const ChartsSection = styled.div`

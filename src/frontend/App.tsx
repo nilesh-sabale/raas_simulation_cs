@@ -1,18 +1,18 @@
 import { Routes, Route } from 'react-router-dom'
-import { ErrorBoundary } from '@components/common/ErrorBoundary'
-import { LoadingProvider } from '@components/common/LoadingProvider'
+import { ErrorBoundary } from './components/common/ErrorBoundary'
+import { LoadingProvider } from './components/common/LoadingProvider'
 
 // Pages
-import LandingPage from '@pages/Landing/LandingPage'
-import DashboardLayout from '@components/layout/DashboardLayout'
-import Dashboard from '@pages/Dashboard/Dashboard'
-import Campaigns from '@pages/Campaigns/Campaigns'
-import Analytics from '@pages/Analytics/Analytics'
-import Victims from '@pages/Victims/Victims'
-import Payments from '@pages/Payments/Payments'
-import Logs from '@pages/Logs/Logs'
-import Settings from '@pages/Settings/Settings'
-import NotFound from '@pages/NotFound/NotFound'
+import LandingPage from './pages/Landing/LandingPage'
+import DashboardLayout from './components/layout/DashboardLayout'
+import Dashboard from './pages/Dashboard/Dashboard'
+import Campaigns from './pages/Campaigns/Campaigns'
+import Analytics from './pages/Analytics/Analytics'
+import Victims from './pages/Victims/Victims'
+import Payments from './pages/Payments/Payments'
+import Logs from './pages/Logs/Logs'
+import Settings from './pages/Settings/Settings'
+import NotFound from './pages/NotFound/NotFound'
 
 function App() {
     return (
