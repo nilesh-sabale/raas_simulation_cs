@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback } from 'react'
-import { websocketService } from '@services/websocket'
-import { WebSocketEvents } from '@/types'
+import { websocketService } from '../services/websocket'
+import { WebSocketEvents } from '../types'
 
 export function useWebSocket() {
     const isConnected = websocketService.isConnected

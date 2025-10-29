@@ -7,7 +7,7 @@ import {
     ActivityLog,
     ApiError,
     CampaignFormData
-} from '@/types'
+} from '../types'
 
 class ApiService {
     private client: AxiosInstance

@@ -3,12 +3,12 @@ import styled from 'styled-components'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import { Target, DollarSign, Users, Shield } from 'lucide-react'
-import { Button } from '@components/common/Button'
-import { Input } from '@components/common/Input'
-import { Card } from '@components/common/Card'
-import { Modal } from '@components/common/Modal'
-import { CampaignFormData } from '@/types'
-import { apiService } from '@services/api'
+import { Button } from '../common/Button'
+import { Input } from '../common/Input'
+import { Card } from '../common/Card'
+import { Modal } from '../common/Modal'
+import { CampaignFormData } from '../../types'
+import { apiService } from '../../services/api'
 
 interface CampaignFormProps {
     isOpen: boolean

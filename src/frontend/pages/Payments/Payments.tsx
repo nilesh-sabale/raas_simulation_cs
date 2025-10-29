@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
 import { CreditCard, CheckCircle, Clock, AlertCircle, Copy } from 'lucide-react'
-import { useAppStore } from '@store/appStore'
-import { Button } from '@components/common/Button'
-import { Card } from '@components/common/Card'
-import { StatCard } from '@components/charts/StatCard'
+import { useAppStore } from '../../store/appStore'
+import { Button } from '../../components/common/Button'
+import { Card } from '../../components/common/Card'
+import { StatCard } from '../../components/charts/StatCard'
 import { toast } from 'react-hot-toast'
-import { apiService } from '@services/api'
+import { apiService } from '../../services/api'
 
 const PaymentsContainer = styled.div`
   padding: var(--spacing-xl);

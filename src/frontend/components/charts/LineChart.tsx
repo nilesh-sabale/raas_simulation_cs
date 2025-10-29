@@ -10,7 +10,7 @@ import {
     ResponsiveContainer,
     Legend
 } from 'recharts'
-import { ChartDataPoint } from '@/types'
+import { ChartDataPoint } from '../../types'
 
 interface LineChartProps {
     data: ChartDataPoint[]
