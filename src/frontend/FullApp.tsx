@@ -9,9 +9,13 @@ import LandingPage from './pages/Landing/LandingPage'
 import DashboardLayout from './components/layout/DashboardLayout'
 import Dashboard from './pages/Dashboard/Dashboard'
 import Campaigns from './pages/Campaigns/Campaigns'
+import Victims from './pages/Victims/Victims'
 import Payments from './pages/Payments/Payments'
 import Logs from './pages/Logs/Logs'
 import NetworkPage from './pages/Network/NetworkPage'
+import Timeline from './pages/Timeline/Timeline'
+import Defense from './pages/Defense/Defense'
+import Settings from './pages/Settings/Settings'
 import NotFound from './pages/NotFound/NotFound'
 
 const AppContainer = styled.div`
@@ -19,6 +23,7 @@ const AppContainer = styled.div`
   background: var(--gradient-bg);
   position: relative;
   
+  /* Reduced opacity and removed heavy animations for better performance */
   &::before {
     content: '';
     position: fixed;
@@ -27,9 +32,9 @@ const AppContainer = styled.div`
     right: 0;
     bottom: 0;
     background: var(--gradient-mesh);
-    opacity: 0.03;
+    opacity: 0.01;
     z-index: -2;
-    animation: meshRotate 20s linear infinite;
+    /* Removed animation for better performance */
   }
   
   &::after {
@@ -40,8 +45,9 @@ const AppContainer = styled.div`
     right: 0;
     bottom: 0;
     background: var(--gradient-glow);
+    opacity: 0.05;
     z-index: -1;
-    animation: glowPulse 8s ease-in-out infinite;
+    /* Removed animation for better performance */
   }
 `
 
@@ -59,9 +65,13 @@ function FullApp() {
                             <Route index element={<Dashboard />} />
                             <Route path="dashboard" element={<Dashboard />} />
                             <Route path="campaigns" element={<Campaigns />} />
+                            <Route path="victims" element={<Victims />} />
                             <Route path="payments" element={<Payments />} />
                             <Route path="logs" element={<Logs />} />
-                            <Route path="network" element={<NetworkPage />} />
+                            <Route path="analytics/network" element={<NetworkPage />} />
+                            <Route path="analytics/timeline" element={<Timeline />} />
+                            <Route path="defense" element={<Defense />} />
+                            <Route path="settings" element={<Settings />} />
                         </Route>
 
                         {/* 404 Page */}

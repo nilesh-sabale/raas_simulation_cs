@@ -90,19 +90,22 @@ class ApiService {
     }
 
     // Statistics
-    async getStats(): Promise<SimulationStats> {
-        const response = await this.client.get('/stats')
+    async getStats(viewMode?: string): Promise<SimulationStats> {
+        const params = viewMode ? { view_mode: viewMode } : {}
+        const response = await this.client.get('/stats', { params })
         return response.data
     }
 
-    async getEnhancedStats(): Promise<SimulationStats> {
-        const response = await this.client.get('/stats')
+    async getEnhancedStats(viewMode?: string): Promise<SimulationStats> {
+        const params = viewMode ? { view_mode: viewMode } : {}
+        const response = await this.client.get('/stats', { params })
         return response.data
     }
 
     // Campaigns
-    async getCampaigns(): Promise<Campaign[]> {
-        const response = await this.client.get('/campaigns')
+    async getCampaigns(viewMode?: string): Promise<Campaign[]> {
+        const params = viewMode ? { view_mode: viewMode } : {}
+        const response = await this.client.get('/campaigns', { params })
         return response.data
     }
 
@@ -127,8 +130,9 @@ class ApiService {
     }
 
     // Payments
-    async getPayments(): Promise<Payment[]> {
-        const response = await this.client.get('/payments')
+    async getPayments(viewMode?: string): Promise<Payment[]> {
+        const params = viewMode ? { view_mode: viewMode } : {}
+        const response = await this.client.get('/payments', { params })
         return response.data
     }
 
@@ -143,8 +147,9 @@ class ApiService {
     }
 
     // Activity Logs
-    async getLogs(): Promise<ActivityLog[]> {
-        const response = await this.client.get('/logs')
+    async getLogs(viewMode?: string): Promise<ActivityLog[]> {
+        const params = viewMode ? { view_mode: viewMode } : {}
+        const response = await this.client.get('/logs', { params })
         return response.data
     }
 

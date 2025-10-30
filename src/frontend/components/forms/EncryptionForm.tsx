@@ -2,12 +2,12 @@ import React, { useState, useRef } from 'react'
 import styled from 'styled-components'
 import { toast } from 'react-hot-toast'
 import { Upload, Lock, Unlock, FileText, AlertTriangle } from 'lucide-react'
-import { Button } from '@components/common/Button'
-import { Card } from '@components/common/Card'
-import { apiService } from '@services/api'
+import { Button } from '../common/Button'
+import { Card } from '../common/Card'
+import { apiService } from '../../services/api'
 
 interface EncryptionFormProps {
-    onEncryptionComplete?: (result: any) => void
+  onEncryptionComplete?: (result: any) => void
 }
 
 const FormContainer = styled(Card)`
@@ -35,16 +35,16 @@ const FormSection = styled.div`
 
 const FileUploadArea = styled.div<{ isDragOver: boolean; hasFile: boolean }>`
   border: 2px dashed ${props =>
-        props.hasFile ? 'var(--color-primary)' :
-            props.isDragOver ? 'var(--color-primary)' : 'var(--border)'
-    };
+    props.hasFile ? 'var(--color-primary)' :
+      props.isDragOver ? 'var(--color-primary)' : 'var(--border)'
+  };
   border-radius: var(--radius-lg);
   padding: var(--spacing-xxl);
   text-align: center;
   background: ${props =>
-        props.hasFile ? 'rgba(0, 255, 136, 0.05)' :
-            props.isDragOver ? 'rgba(0, 255, 136, 0.1)' : 'var(--bg-glass)'
-    };
+    props.hasFile ? 'rgba(0, 255, 136, 0.05)' :
+      props.isDragOver ? 'rgba(0, 255, 136, 0.1)' : 'var(--bg-glass)'
+  };
   transition: var(--transition-normal);
   cursor: pointer;
   
@@ -259,266 +259,266 @@ const DecryptSection = styled.div`
 `
 
 export const EncryptionForm: React.FC<EncryptionFormProps> = ({ onEncryptionComplete }) => {
-    const [file, setFile] = useState<File | null>(null)
-    const [method, setMethod] = useState<'base64' | 'caesar'>('base64')
-    const [shift, setShift] = useState(3)
-    const [loading, setLoading] = useState(false)
-    const [result, setResult] = useState<any>(null)
-    const [decrypted, setDecrypted] = useState<string | null>(null)
-    const [isDragOver, setIsDragOver] = useState(false)
-    const fileInputRef = useRef<HTMLInputElement>(null)
+  const [file, setFile] = useState<File | null>(null)
+  const [method, setMethod] = useState<'base64' | 'caesar'>('base64')
+  const [shift, setShift] = useState(3)
+  const [loading, setLoading] = useState(false)
+  const [result, setResult] = useState<any>(null)
+  const [decrypted, setDecrypted] = useState<string | null>(null)
+  const [isDragOver, setIsDragOver] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
-    const handleFileSelect = (selectedFile: File) => {
-        if (selectedFile.size > 1024 * 1024) { // 1MB limit
-            toast.error('File size must be less than 1MB')
-            return
-        }
-
-        if (!selectedFile.type.startsWith('text/')) {
-            toast.error('Please select a text file')
-            return
-        }
-
-        setFile(selectedFile)
-        setResult(null)
-        setDecrypted(null)
+  const handleFileSelect = (selectedFile: File) => {
+    if (selectedFile.size > 1024 * 1024) { // 1MB limit
+      toast.error('File size must be less than 1MB')
+      return
     }
 
-    const handleDrop = (e: React.DragEvent) => {
-        e.preventDefault()
-        setIsDragOver(false)
-
-        const droppedFile = e.dataTransfer.files[0]
-        if (droppedFile) {
-            handleFileSelect(droppedFile)
-        }
+    if (!selectedFile.type.startsWith('text/')) {
+      toast.error('Please select a text file')
+      return
     }
 
-    const handleDragOver = (e: React.DragEvent) => {
-        e.preventDefault()
-        setIsDragOver(true)
+    setFile(selectedFile)
+    setResult(null)
+    setDecrypted(null)
+  }
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragOver(false)
+
+    const droppedFile = e.dataTransfer.files[0]
+    if (droppedFile) {
+      handleFileSelect(droppedFile)
+    }
+  }
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragOver(true)
+  }
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragOver(false)
+  }
+
+  const handleClick = () => {
+    fileInputRef.current?.click()
+  }
+
+  const handleEncrypt = async () => {
+    if (!file) {
+      toast.error('Please select a file first')
+      return
     }
 
-    const handleDragLeave = (e: React.DragEvent) => {
-        e.preventDefault()
-        setIsDragOver(false)
+    setLoading(true)
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('method', method)
+      if (method === 'caesar') {
+        formData.append('shift', shift.toString())
+      }
+
+      const result = await apiService.encryptFile(formData, 'demo-victim-001')
+      setResult(result)
+
+      if (onEncryptionComplete) {
+        onEncryptionComplete(result)
+      }
+
+      toast.success('File encrypted successfully!')
+    } catch (error) {
+      toast.error('Encryption failed')
+      console.error('Encryption error:', error)
+    } finally {
+      setLoading(false)
     }
+  }
 
-    const handleClick = () => {
-        fileInputRef.current?.click()
+  const handleDecrypt = async () => {
+    if (!result) return
+
+    try {
+      const decryptResult = await apiService.decryptContent(
+        result.method,
+        result.encoded,
+        method === 'caesar' ? shift : undefined
+      )
+      setDecrypted(decryptResult.decoded)
+      toast.success('File decrypted successfully!')
+    } catch (error) {
+      toast.error('Decryption failed')
+      console.error('Decryption error:', error)
     }
+  }
 
-    const handleEncrypt = async () => {
-        if (!file) {
-            toast.error('Please select a file first')
-            return
-        }
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes'
+    const k = 1024
+    const sizes = ['Bytes', 'KB', 'MB']
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+  }
 
-        setLoading(true)
-        try {
-            const formData = new FormData()
-            formData.append('file', file)
-            formData.append('method', method)
-            if (method === 'caesar') {
-                formData.append('shift', shift.toString())
+  return (
+    <FormContainer>
+      <FormSection>
+        <h3>
+          <Upload />
+          File Upload
+        </h3>
+
+        <FileUploadArea
+          isDragOver={isDragOver}
+          hasFile={!!file}
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onClick={handleClick}
+        >
+          <div className="upload-icon">
+            {file ? <FileText /> : <Upload />}
+          </div>
+          <div className="upload-text">
+            {file ? file.name : 'Drop your file here or click to browse'}
+          </div>
+          <div className="upload-hint">
+            {file ? 'Click to select a different file' : 'Only text files up to 1MB are supported'}
+          </div>
+        </FileUploadArea>
+
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="text/*"
+          style={{ display: 'none' }}
+          onChange={(e) => {
+            const selectedFile = e.target.files?.[0]
+            if (selectedFile) {
+              handleFileSelect(selectedFile)
             }
+          }}
+        />
 
-            const result = await apiService.encryptFile(formData, 'demo-victim-001')
-            setResult(result)
+        {file && (
+          <FileInfo>
+            <FileText className="file-icon" />
+            <div className="file-details">
+              <div className="file-name">{file.name}</div>
+              <div className="file-size">{formatFileSize(file.size)}</div>
+            </div>
+          </FileInfo>
+        )}
+      </FormSection>
 
-            if (onEncryptionComplete) {
-                onEncryptionComplete(result)
-            }
+      <FormSection>
+        <h3>
+          <Lock />
+          Encryption Method
+        </h3>
 
-            toast.success('File encrypted successfully!')
-        } catch (error) {
-            toast.error('Encryption failed')
-            console.error('Encryption error:', error)
-        } finally {
-            setLoading(false)
-        }
-    }
+        <MethodSelector>
+          <MethodCard
+            selected={method === 'base64'}
+            onClick={() => setMethod('base64')}
+          >
+            <div className="method-name">Base64 Encoding</div>
+            <div className="method-description">
+              Simple reversible encoding for demonstration purposes. Not actual encryption.
+            </div>
+          </MethodCard>
 
-    const handleDecrypt = async () => {
-        if (!result) return
+          <MethodCard
+            selected={method === 'caesar'}
+            onClick={() => setMethod('caesar')}
+          >
+            <div className="method-name">Caesar Cipher</div>
+            <div className="method-description">
+              Classic substitution cipher with configurable shift value. Educational only.
+            </div>
+          </MethodCard>
+        </MethodSelector>
 
-        try {
-            const decryptResult = await apiService.decryptContent(
-                result.method,
-                result.encoded,
-                method === 'caesar' ? shift : undefined
-            )
-            setDecrypted(decryptResult.decoded)
-            toast.success('File decrypted successfully!')
-        } catch (error) {
-            toast.error('Decryption failed')
-            console.error('Decryption error:', error)
-        }
-    }
+        {method === 'caesar' && (
+          <ShiftInput>
+            <label>Shift Value:</label>
+            <input
+              type="number"
+              min="1"
+              max="25"
+              value={shift}
+              onChange={(e) => setShift(parseInt(e.target.value) || 3)}
+            />
+          </ShiftInput>
+        )}
 
-    const formatFileSize = (bytes: number) => {
-        if (bytes === 0) return '0 Bytes'
-        const k = 1024
-        const sizes = ['Bytes', 'KB', 'MB']
-        const i = Math.floor(Math.log(bytes) / Math.log(k))
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
-    }
+        <Button
+          variant="primary"
+          onClick={handleEncrypt}
+          loading={loading}
+          disabled={!file}
+          icon={<Lock />}
+          fullWidth
+        >
+          Encrypt File
+        </Button>
+      </FormSection>
 
-    return (
-        <FormContainer>
-            <FormSection>
-                <h3>
-                    <Upload />
-                    File Upload
-                </h3>
+      {result && (
+        <>
+          <ResultSection>
+            <h4>
+              <Lock />
+              Encrypted Content
+            </h4>
+            <div className="result-content">
+              {result.encoded}
+            </div>
+          </ResultSection>
 
-                <FileUploadArea
-                    isDragOver={isDragOver}
-                    hasFile={!!file}
-                    onDrop={handleDrop}
-                    onDragOver={handleDragOver}
-                    onDragLeave={handleDragLeave}
-                    onClick={handleClick}
-                >
-                    <div className="upload-icon">
-                        {file ? <FileText /> : <Upload />}
-                    </div>
-                    <div className="upload-text">
-                        {file ? file.name : 'Drop your file here or click to browse'}
-                    </div>
-                    <div className="upload-hint">
-                        {file ? 'Click to select a different file' : 'Only text files up to 1MB are supported'}
-                    </div>
-                </FileUploadArea>
+          <RansomNote>
+            <div className="ransom-header">
+              <AlertTriangle />
+              RANSOM DEMAND (SIMULATION)
+            </div>
+            <div className="ransom-details">
+              <p>Your file has been encrypted! To recover your data, you must pay:</p>
+              <p>Amount: <span className="amount">{result.ransom.amount} BTC</span></p>
+              <p>Payment Address:</p>
+              <div className="address">{result.ransom.address}</div>
+              <p>Payment ID: {result.ransom.payment_id}</p>
+              <p><strong>This is a simulation - no real payment is required!</strong></p>
+            </div>
+          </RansomNote>
 
-                <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="text/*"
-                    style={{ display: 'none' }}
-                    onChange={(e) => {
-                        const selectedFile = e.target.files?.[0]
-                        if (selectedFile) {
-                            handleFileSelect(selectedFile)
-                        }
-                    }}
-                />
+          <FormSection>
+            <Button
+              variant="secondary"
+              onClick={handleDecrypt}
+              icon={<Unlock />}
+              fullWidth
+            >
+              Decrypt File (Simulation)
+            </Button>
+          </FormSection>
 
-                {file && (
-                    <FileInfo>
-                        <FileText className="file-icon" />
-                        <div className="file-details">
-                            <div className="file-name">{file.name}</div>
-                            <div className="file-size">{formatFileSize(file.size)}</div>
-                        </div>
-                    </FileInfo>
-                )}
-            </FormSection>
-
-            <FormSection>
-                <h3>
-                    <Lock />
-                    Encryption Method
-                </h3>
-
-                <MethodSelector>
-                    <MethodCard
-                        selected={method === 'base64'}
-                        onClick={() => setMethod('base64')}
-                    >
-                        <div className="method-name">Base64 Encoding</div>
-                        <div className="method-description">
-                            Simple reversible encoding for demonstration purposes. Not actual encryption.
-                        </div>
-                    </MethodCard>
-
-                    <MethodCard
-                        selected={method === 'caesar'}
-                        onClick={() => setMethod('caesar')}
-                    >
-                        <div className="method-name">Caesar Cipher</div>
-                        <div className="method-description">
-                            Classic substitution cipher with configurable shift value. Educational only.
-                        </div>
-                    </MethodCard>
-                </MethodSelector>
-
-                {method === 'caesar' && (
-                    <ShiftInput>
-                        <label>Shift Value:</label>
-                        <input
-                            type="number"
-                            min="1"
-                            max="25"
-                            value={shift}
-                            onChange={(e) => setShift(parseInt(e.target.value) || 3)}
-                        />
-                    </ShiftInput>
-                )}
-
-                <Button
-                    variant="primary"
-                    onClick={handleEncrypt}
-                    loading={loading}
-                    disabled={!file}
-                    icon={<Lock />}
-                    fullWidth
-                >
-                    Encrypt File
-                </Button>
-            </FormSection>
-
-            {result && (
-                <>
-                    <ResultSection>
-                        <h4>
-                            <Lock />
-                            Encrypted Content
-                        </h4>
-                        <div className="result-content">
-                            {result.encoded}
-                        </div>
-                    </ResultSection>
-
-                    <RansomNote>
-                        <div className="ransom-header">
-                            <AlertTriangle />
-                            RANSOM DEMAND (SIMULATION)
-                        </div>
-                        <div className="ransom-details">
-                            <p>Your file has been encrypted! To recover your data, you must pay:</p>
-                            <p>Amount: <span className="amount">{result.ransom.amount} BTC</span></p>
-                            <p>Payment Address:</p>
-                            <div className="address">{result.ransom.address}</div>
-                            <p>Payment ID: {result.ransom.payment_id}</p>
-                            <p><strong>This is a simulation - no real payment is required!</strong></p>
-                        </div>
-                    </RansomNote>
-
-                    <FormSection>
-                        <Button
-                            variant="secondary"
-                            onClick={handleDecrypt}
-                            icon={<Unlock />}
-                            fullWidth
-                        >
-                            Decrypt File (Simulation)
-                        </Button>
-                    </FormSection>
-
-                    {decrypted && (
-                        <DecryptSection>
-                            <h4>
-                                <Unlock />
-                                Decrypted Content
-                            </h4>
-                            <div className="decrypt-content">
-                                {decrypted}
-                            </div>
-                        </DecryptSection>
-                    )}
-                </>
-            )}
-        </FormContainer>
-    )
+          {decrypted && (
+            <DecryptSection>
+              <h4>
+                <Unlock />
+                Decrypted Content
+              </h4>
+              <div className="decrypt-content">
+                {decrypted}
+              </div>
+            </DecryptSection>
+          )}
+        </>
+      )}
+    </FormContainer>
+  )
 }

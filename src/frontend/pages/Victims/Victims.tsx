@@ -2,8 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 
 import { Users, AlertTriangle, Shield } from 'lucide-react'
-import { EncryptionForm } from '@components/forms/EncryptionForm'
-import { Card } from '@components/common/Card'
+import { EncryptionForm } from '../../components/forms/EncryptionForm'
+import { Card } from '../../components/common/Card'
 
 const VictimsContainer = styled.div`
   padding: var(--spacing-xl);

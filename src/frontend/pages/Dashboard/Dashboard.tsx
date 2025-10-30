@@ -8,24 +8,14 @@ import { LineChart } from '../../components/charts/LineChart'
 import { PieChart } from '../../components/charts/PieChart'
 import { Button } from '../../components/common/Button'
 import { Card } from '../../components/common/Card'
+import ViewModeIndicator from '../../components/common/ViewModeIndicator'
 
 const DashboardContainer = styled.div`
   padding: var(--spacing-xl);
   min-height: calc(100vh - var(--header-height));
   position: relative;
   
-  &::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--gradient-glow);
-    opacity: 0.1;
-    z-index: -1;
-    animation: glowPulse 8s ease-in-out infinite;
-  }
+  /* Removed heavy background animation for better performance */
   
   @media (max-width: 768px) {
     padding: var(--spacing-lg);
@@ -58,7 +48,7 @@ const HeaderInfo = styled.div`
     align-items: center;
     gap: var(--spacing-md);
     letter-spacing: -0.02em;
-    animation: modernPulse 4s ease-in-out infinite;
+    /* Removed animation for better performance */
   }
   
   p {
@@ -314,6 +304,8 @@ const Dashboard: React.FC = () => {
                 </HeaderInfo>
 
                 <HeaderActions>
+                    <ViewModeIndicator />
+
                     <ConnectionStatus $connected={isConnected}>
                         <span className="status-dot" />
                         {isConnected ? 'Connected' : 'Disconnected'}

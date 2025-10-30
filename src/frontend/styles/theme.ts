@@ -90,10 +90,10 @@ export const cssVariables = `
     --gradient-danger: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
     --gradient-warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
     --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    --gradient-bg: linear-gradient(135deg, #0a0a0f 0%, #111827 50%, #1f2937 100%);
-    --gradient-card: linear-gradient(145deg, rgba(31, 41, 55, 0.9) 0%, rgba(17, 24, 39, 0.8) 100%);
-    --gradient-glow: radial-gradient(circle at center, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
-    --gradient-mesh: conic-gradient(from 180deg at 50% 50%, #6366f1 0deg, #8b5cf6 120deg, #06b6d4 240deg, #6366f1 360deg);
+    --gradient-bg: #0a0a0f; /* Simplified for better performance */
+    --gradient-card: rgba(31, 41, 55, 0.9); /* Simplified for better performance */
+    --gradient-glow: rgba(99, 102, 241, 0.05); /* Simplified for better performance */
+    --gradient-mesh: rgba(99, 102, 241, 0.02); /* Simplified for better performance */
     
     /* Smooth Animations */
     --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -108,7 +108,7 @@ export const cssVariables = `
     --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.3);
     
     /* Layout */
-    --sidebar-width: 280px;
+    --sidebar-width: 200px;
     --header-height: 80px;
     
     /* Spacing */

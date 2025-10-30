@@ -3,15 +3,15 @@ import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
 import {
-    Shield,
-    Activity,
-    BarChart3,
-    Lock,
-    Users,
-    AlertTriangle,
-    ArrowRight,
-    Github,
-    BookOpen
+  Shield,
+  Activity,
+  BarChart3,
+  Lock,
+  Users,
+  AlertTriangle,
+  ArrowRight,
+  Github,
+  BookOpen
 } from 'lucide-react'
 
 const LandingContainer = styled.div`
@@ -28,11 +28,10 @@ const MatrixBackground = styled.div`
   width: 100%;
   height: 100%;
   background: 
-    radial-gradient(circle at 20% 80%, rgba(0, 255, 136, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(0, 204, 106, 0.08) 0%, transparent 50%),
-    linear-gradient(45deg, transparent 30%, rgba(0, 255, 136, 0.03) 50%, transparent 70%);
+    radial-gradient(circle at 20% 80%, rgba(0, 255, 136, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(0, 204, 106, 0.03) 0%, transparent 50%);
   z-index: -1;
-  animation: matrixShift 20s ease-in-out infinite;
+  /* Removed animation for better performance */
 `
 
 const Header = styled.header`
@@ -356,159 +355,159 @@ const Footer = styled.footer`
 `
 
 const LandingPage: React.FC = () => {
-    const navigate = useNavigate()
+  const navigate = useNavigate()
 
-    const handleEnterSimulation = () => {
-        navigate('/app')
+  const handleEnterSimulation = () => {
+    navigate('/app/dashboard')
+  }
+
+  const features = [
+    {
+      icon: <BarChart3 />,
+      title: 'Real-time Dashboard',
+      description: 'Monitor simulation statistics, campaign performance, and system activity with live updates and interactive charts.',
+      action: 'View Dashboard'
+    },
+    {
+      icon: <Lock />,
+      title: 'Encryption Simulation',
+      description: 'Safely simulate file encryption using reversible methods like Base64 and Caesar cipher - no real harm done.',
+      action: 'Try Encryption'
+    },
+    {
+      icon: <Users />,
+      title: 'Multi-Role Experience',
+      description: 'Experience different perspectives: operator, affiliate, and victim roles to understand the complete ecosystem.',
+      action: 'Explore Roles'
+    },
+    {
+      icon: <Activity />,
+      title: 'Network Visualization',
+      description: 'Visualize attack networks, connection patterns, and data flow with interactive network graphs.',
+      action: 'View Network'
+    },
+    {
+      icon: <Shield />,
+      title: 'Blue Team Mode',
+      description: 'Switch to defensive perspective to understand detection, prevention, and response strategies.',
+      action: 'Defense Mode'
+    },
+    {
+      icon: <BookOpen />,
+      title: 'Educational Focus',
+      description: 'Learn cybersecurity concepts through hands-on simulation without any real-world risks or consequences.',
+      action: 'Learn More'
     }
+  ]
 
-    const features = [
-        {
-            icon: <BarChart3 />,
-            title: 'Real-time Dashboard',
-            description: 'Monitor simulation statistics, campaign performance, and system activity with live updates and interactive charts.',
-            action: 'View Dashboard'
-        },
-        {
-            icon: <Lock />,
-            title: 'Encryption Simulation',
-            description: 'Safely simulate file encryption using reversible methods like Base64 and Caesar cipher - no real harm done.',
-            action: 'Try Encryption'
-        },
-        {
-            icon: <Users />,
-            title: 'Multi-Role Experience',
-            description: 'Experience different perspectives: operator, affiliate, and victim roles to understand the complete ecosystem.',
-            action: 'Explore Roles'
-        },
-        {
-            icon: <Activity />,
-            title: 'Network Visualization',
-            description: 'Visualize attack networks, connection patterns, and data flow with interactive network graphs.',
-            action: 'View Network'
-        },
-        {
-            icon: <Shield />,
-            title: 'Blue Team Mode',
-            description: 'Switch to defensive perspective to understand detection, prevention, and response strategies.',
-            action: 'Defense Mode'
-        },
-        {
-            icon: <BookOpen />,
-            title: 'Educational Focus',
-            description: 'Learn cybersecurity concepts through hands-on simulation without any real-world risks or consequences.',
-            action: 'Learn More'
-        }
-    ]
+  return (
+    <LandingContainer>
+      <MatrixBackground />
 
-    return (
-        <LandingContainer>
-            <MatrixBackground />
+      <Header>
+        <Nav>
+          <Logo>
+            <span className="logo-icon">⚡</span>
+            <div>
+              <span className="logo-text">RaaS</span>
+              <span className="logo-subtitle">SIMULATION</span>
+            </div>
+          </Logo>
+          <NavLinks>
+            <NavLink href="#features">Features</NavLink>
+            <NavLink href="#about">About</NavLink>
+            <NavLink href="https://github.com" target="_blank">
+              <Github size={16} /> GitHub
+            </NavLink>
+          </NavLinks>
+        </Nav>
+      </Header>
 
-            <Header>
-                <Nav>
-                    <Logo>
-                        <span className="logo-icon">⚡</span>
-                        <div>
-                            <span className="logo-text">RaaS</span>
-                            <span className="logo-subtitle">SIMULATION</span>
-                        </div>
-                    </Logo>
-                    <NavLinks>
-                        <NavLink href="#features">Features</NavLink>
-                        <NavLink href="#about">About</NavLink>
-                        <NavLink href="https://github.com" target="_blank">
-                            <Github size={16} /> GitHub
-                        </NavLink>
-                    </NavLinks>
-                </Nav>
-            </Header>
+      <Main>
+        <HeroSection>
+          <HeroTitle
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            Educational RaaS Simulation
+          </HeroTitle>
 
-            <Main>
-                <HeroSection>
-                    <HeroTitle
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8 }}
-                    >
-                        Educational RaaS Simulation
-                    </HeroTitle>
+          <HeroSubtitle
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            Learn cybersecurity through safe, hands-on simulation of ransomware-as-a-service operations.
+            No real encryption, no actual harm - just pure educational value.
+          </HeroSubtitle>
 
-                    <HeroSubtitle
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.2 }}
-                    >
-                        Learn cybersecurity through safe, hands-on simulation of ransomware-as-a-service operations.
-                        No real encryption, no actual harm - just pure educational value.
-                    </HeroSubtitle>
+          <CTAButtons
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
+            <PrimaryButton onClick={handleEnterSimulation}>
+              Enter Simulation
+              <ArrowRight />
+            </PrimaryButton>
+            <SecondaryButton onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>
+              Learn More
+              <BookOpen />
+            </SecondaryButton>
+          </CTAButtons>
+        </HeroSection>
 
-                    <CTAButtons
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.4 }}
-                    >
-                        <PrimaryButton onClick={handleEnterSimulation}>
-                            Enter Simulation
-                            <ArrowRight />
-                        </PrimaryButton>
-                        <SecondaryButton onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>
-                            Learn More
-                            <BookOpen />
-                        </SecondaryButton>
-                    </CTAButtons>
-                </HeroSection>
+        <FeaturesSection id="features">
+          <SectionTitle>Simulation Features</SectionTitle>
+          <FeaturesGrid>
+            {features.map((feature, index) => (
+              <FeatureCard
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
+              >
+                <FeatureIcon>
+                  {feature.icon}
+                </FeatureIcon>
+                <FeatureTitle>{feature.title}</FeatureTitle>
+                <FeatureDescription>{feature.description}</FeatureDescription>
+                <FeatureLink onClick={handleEnterSimulation}>
+                  {feature.action}
+                  <ArrowRight />
+                </FeatureLink>
+              </FeatureCard>
+            ))}
+          </FeaturesGrid>
+        </FeaturesSection>
 
-                <FeaturesSection id="features">
-                    <SectionTitle>Simulation Features</SectionTitle>
-                    <FeaturesGrid>
-                        {features.map((feature, index) => (
-                            <FeatureCard
-                                key={index}
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.6, delay: index * 0.1 }}
-                                viewport={{ once: true }}
-                            >
-                                <FeatureIcon>
-                                    {feature.icon}
-                                </FeatureIcon>
-                                <FeatureTitle>{feature.title}</FeatureTitle>
-                                <FeatureDescription>{feature.description}</FeatureDescription>
-                                <FeatureLink onClick={handleEnterSimulation}>
-                                    {feature.action}
-                                    <ArrowRight />
-                                </FeatureLink>
-                            </FeatureCard>
-                        ))}
-                    </FeaturesGrid>
-                </FeaturesSection>
+        <DisclaimerSection id="about">
+          <DisclaimerTitle>
+            <AlertTriangle />
+            Educational Purpose Only
+          </DisclaimerTitle>
+          <DisclaimerText>
+            This simulation is designed exclusively for educational and research purposes in cybersecurity.
+            It does not perform real encryption, cause actual damage, or engage in any malicious activities.
+          </DisclaimerText>
+          <DisclaimerText>
+            All "encryption" uses reversible encoding methods (Base64, Caesar cipher) on dummy text files.
+            No real files are harmed, no actual payments are processed, and no genuine security threats are created.
+          </DisclaimerText>
+          <DisclaimerText>
+            <strong>Legal Notice:</strong> This tool is intended for authorized educational use only.
+            Users are solely responsible for ensuring their use complies with applicable laws and regulations.
+          </DisclaimerText>
+        </DisclaimerSection>
+      </Main>
 
-                <DisclaimerSection id="about">
-                    <DisclaimerTitle>
-                        <AlertTriangle />
-                        Educational Purpose Only
-                    </DisclaimerTitle>
-                    <DisclaimerText>
-                        This simulation is designed exclusively for educational and research purposes in cybersecurity.
-                        It does not perform real encryption, cause actual damage, or engage in any malicious activities.
-                    </DisclaimerText>
-                    <DisclaimerText>
-                        All "encryption" uses reversible encoding methods (Base64, Caesar cipher) on dummy text files.
-                        No real files are harmed, no actual payments are processed, and no genuine security threats are created.
-                    </DisclaimerText>
-                    <DisclaimerText>
-                        <strong>Legal Notice:</strong> This tool is intended for authorized educational use only.
-                        Users are solely responsible for ensuring their use complies with applicable laws and regulations.
-                    </DisclaimerText>
-                </DisclaimerSection>
-            </Main>
-
-            <Footer>
-                <p>&copy; 2024 RaaS Educational Simulation. Built for cybersecurity education and research.</p>
-            </Footer>
-        </LandingContainer>
-    )
+      <Footer>
+        <p>&copy; 2024 RaaS Educational Simulation. Built for cybersecurity education and research.</p>
+      </Footer>
+    </LandingContainer>
+  )
 }
 
 export default LandingPage

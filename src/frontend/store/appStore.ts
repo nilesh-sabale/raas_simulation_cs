@@ -16,6 +16,7 @@ interface AppStore {
     theme: 'light' | 'dark'
     sidebarCollapsed: boolean
     currentUser: User | null
+    viewMode: 'operator' | 'affiliate' | 'victim'
 
     // Data State
     stats: SimulationStats
@@ -51,6 +52,7 @@ interface AppStore {
     setTheme: (theme: 'light' | 'dark') => void
     setSidebarCollapsed: (collapsed: boolean) => void
     setCurrentUser: (user: User | null) => void
+    setViewMode: (mode: 'operator' | 'affiliate' | 'victim') => void
 
     // Data Actions
     fetchStats: () => Promise<void>
@@ -94,6 +96,7 @@ const initialState = {
     theme: 'dark' as const,
     sidebarCollapsed: false,
     currentUser: null,
+    viewMode: 'operator' as const,
 
     // Data State
     stats: initialStats,
@@ -136,6 +139,12 @@ export const useAppStore = create<AppStore>()(
                 setTheme: (theme) => set({ theme }),
                 setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
                 setCurrentUser: (user) => set({ currentUser: user }),
+                setViewMode: (mode) => {
+                    set({ viewMode: mode })
+                    // Refresh data when view mode changes
+                    const { refreshAll } = get()
+                    refreshAll()
+                },
 
                 // Data Actions
                 fetchStats: async () => {
@@ -145,7 +154,8 @@ export const useAppStore = create<AppStore>()(
                     }))
 
                     try {
-                        const stats = await apiService.getEnhancedStats()
+                        const { viewMode } = get()
+                        const stats = await apiService.getEnhancedStats(viewMode)
                         set(state => ({
                             stats,
                             loading: { ...state.loading, stats: false },
@@ -167,7 +177,8 @@ export const useAppStore = create<AppStore>()(
                     }))
 
                     try {
-                        const campaigns = await apiService.getCampaigns()
+                        const { viewMode } = get()
+                        const campaigns = await apiService.getCampaigns(viewMode)
                         set(state => ({
                             campaigns,
                             loading: { ...state.loading, campaigns: false },
@@ -189,7 +200,8 @@ export const useAppStore = create<AppStore>()(
                     }))
 
                     try {
-                        const payments = await apiService.getPayments()
+                        const { viewMode } = get()
+                        const payments = await apiService.getPayments(viewMode)
                         set(state => ({
                             payments,
                             loading: { ...state.loading, payments: false },
@@ -211,7 +223,8 @@ export const useAppStore = create<AppStore>()(
                     }))
 
                     try {
-                        const logs = await apiService.getLogs()
+                        const { viewMode } = get()
+                        const logs = await apiService.getLogs(viewMode)
                         set(state => ({
                             logs,
                             loading: { ...state.loading, logs: false },
@@ -311,6 +324,7 @@ export const useAppStore = create<AppStore>()(
                     theme: state.theme,
                     sidebarCollapsed: state.sidebarCollapsed,
                     currentUser: state.currentUser,
+                    viewMode: state.viewMode,
                 }),
             }
         ),

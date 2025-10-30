@@ -10,11 +10,12 @@ export const GlobalStyles = createGlobalStyle`
     padding: 0;
   }
 
-  /* Performance optimizations */
+  /* Enhanced performance optimizations */
   * {
     will-change: auto;
   }
 
+  /* GPU acceleration for specific elements only */
   .gpu-accelerated {
     transform: translateZ(0);
     backface-visibility: hidden;
@@ -31,15 +32,37 @@ export const GlobalStyles = createGlobalStyle`
     }
   }
 
-  /* Optimize rendering */
+  /* Optimize rendering performance */
   .optimized {
     contain: layout style paint;
     content-visibility: auto;
   }
 
+  /* Improve scrolling performance */
+  * {
+    scroll-behavior: auto;
+  }
+
+  /* Reduce repaints and reflows */
+  img, video {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Optimize animations */
+  @media (prefers-reduced-motion: no-preference) {
+    .animate-on-scroll {
+      animation-play-state: paused;
+    }
+    
+    .animate-on-scroll.in-view {
+      animation-play-state: running;
+    }
+  }
+
   html {
     font-size: 16px;
-    scroll-behavior: smooth;
+    scroll-behavior: auto; /* Changed from smooth for better performance */
   }
 
   body {
@@ -53,30 +76,7 @@ export const GlobalStyles = createGlobalStyle`
     -moz-osx-font-smoothing: grayscale;
     position: relative;
     
-    &::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: var(--gradient-mesh);
-      opacity: 0.03;
-      z-index: -2;
-      animation: meshRotate 20s linear infinite;
-    }
-    
-    &::after {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: var(--gradient-glow);
-      z-index: -1;
-      animation: glowPulse 8s ease-in-out infinite;
-    }
+    /* Removed heavy background animations for better performance */
   }
   
   @keyframes meshRotate {
@@ -231,31 +231,7 @@ export const GlobalStyles = createGlobalStyle`
     100% { background-color: transparent; }
   }
 
-  /* Modern Background Effects */
-  .modern-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-      radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
-      radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.04) 0%, transparent 70%);
-    z-index: -1;
-    animation: backgroundShift 15s ease-in-out infinite;
-  }
-  
-  @keyframes backgroundShift {
-    0%, 100% { 
-      transform: scale(1) rotate(0deg);
-      opacity: 0.8;
-    }
-    50% { 
-      transform: scale(1.1) rotate(180deg);
-      opacity: 1;
-    }
-  }
+  /* Removed heavy background effects for better performance */
 
   /* Responsive Design */
   @media (max-width: 768px) {
