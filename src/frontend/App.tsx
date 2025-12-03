@@ -14,6 +14,10 @@ import Logs from './pages/Logs/Logs'
 import Settings from './pages/Settings/Settings'
 import NotFound from './pages/NotFound/NotFound'
 
+// Role-specific pages
+import VictimPortal from './pages/VictimPortal/VictimPortal'
+import AffiliateDashboard from './pages/Affiliate/AffiliateDashboard'
+
 function App() {
     return (
         <ErrorBoundary>
@@ -22,10 +26,14 @@ function App() {
                     {/* Landing Page */}
                     <Route path="/" element={<LandingPage />} />
 
+                    {/* Victim Portal - Full screen experience */}
+                    <Route path="/victim-portal" element={<VictimPortal />} />
+
                     {/* Dashboard Routes */}
                     <Route path="/app" element={<DashboardLayout />}>
                         <Route index element={<Dashboard />} />
                         <Route path="dashboard" element={<Dashboard />} />
+                        <Route path="affiliate" element={<AffiliateDashboard />} />
                         <Route path="campaigns/*" element={<Campaigns />} />
                         <Route path="analytics/*" element={<Analytics />} />
                         <Route path="victims" element={<Victims />} />

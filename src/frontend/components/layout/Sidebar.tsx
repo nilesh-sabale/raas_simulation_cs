@@ -12,9 +12,11 @@ import {
   Shield,
   Settings,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Home
 } from 'lucide-react'
 import { useAppStore } from '../../store/appStore'
+import { useNavigate } from 'react-router-dom'
 
 interface SidebarProps {
   collapsed: boolean
@@ -246,6 +248,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onMobileClose
 }) => {
   const { viewMode, setViewMode } = useAppStore()
+  const navigate = useNavigate()
+
+  const handleRoleChange = (role: 'operator' | 'affiliate' | 'victim') => {
+    setViewMode(role)
+
+    // Navigate to appropriate page for each role
+    if (role === 'victim') {
+      navigate('/victim-portal')
+    } else if (role === 'affiliate') {
+      navigate('/app/affiliate')
+    } else {
+      navigate('/app/dashboard')
+    }
+  }
 
   const navigationSections = [
     {
@@ -315,6 +331,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
           ))}
         </NavMenu>
 
+        {/* Home Button - always visible */}
+        <NavSection>
+          <NavItem
+            to="/"
+            collapsed={collapsed}
+            style={{ borderTop: '1px solid var(--border)', marginTop: 'var(--spacing-md)', paddingTop: 'var(--spacing-md)' }}
+          >
+            <Home className="nav-icon" />
+            <span className="nav-text">Back to Landing</span>
+          </NavItem>
+        </NavSection>
+
         <RoleSelector collapsed={collapsed}>
           <RoleSelectorTitle title="Switch between different perspectives: Operator (full access), Affiliate (campaign focus), Victim (target view)">
             View Mode
@@ -331,7 +359,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <RoleButton
                   key={role}
                   active={viewMode === role}
-                  onClick={() => setViewMode(role)}
+                  onClick={() => handleRoleChange(role)}
                   title={tooltips[role]}
                 >
                   {role}

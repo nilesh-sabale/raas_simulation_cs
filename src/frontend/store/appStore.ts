@@ -17,6 +17,8 @@ interface AppStore {
     sidebarCollapsed: boolean
     currentUser: User | null
     viewMode: 'operator' | 'affiliate' | 'victim'
+    affiliateId: string | null
+    victimSessionId: string | null
 
     // Data State
     stats: SimulationStats
@@ -53,6 +55,8 @@ interface AppStore {
     setSidebarCollapsed: (collapsed: boolean) => void
     setCurrentUser: (user: User | null) => void
     setViewMode: (mode: 'operator' | 'affiliate' | 'victim') => void
+    setAffiliateId: (id: string | null) => void
+    setVictimSessionId: (id: string | null) => void
 
     // Data Actions
     fetchStats: () => Promise<void>
@@ -97,6 +101,8 @@ const initialState = {
     sidebarCollapsed: false,
     currentUser: null,
     viewMode: 'operator' as const,
+    affiliateId: null,
+    victimSessionId: null,
 
     // Data State
     stats: initialStats,
@@ -140,11 +146,21 @@ export const useAppStore = create<AppStore>()(
                 setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
                 setCurrentUser: (user) => set({ currentUser: user }),
                 setViewMode: (mode) => {
+                    // Apply role-based theme
+                    try {
+                        const { applyRoleTheme } = require('../styles/roleThemes')
+                        applyRoleTheme(mode)
+                    } catch (error) {
+                        console.warn('Failed to apply theme:', error)
+                    }
+
                     set({ viewMode: mode })
                     // Refresh data when view mode changes
                     const { refreshAll } = get()
                     refreshAll()
                 },
+                setAffiliateId: (id) => set({ affiliateId: id }),
+                setVictimSessionId: (id) => set({ victimSessionId: id }),
 
                 // Data Actions
                 fetchStats: async () => {
