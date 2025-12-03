@@ -361,6 +361,14 @@ const LandingPage: React.FC = () => {
     navigate('/app/dashboard')
   }
 
+  const handleVictimDemo = () => {
+    navigate('/victim-portal')
+  }
+
+  const handleAffiliateDemo = () => {
+    navigate('/app/affiliate')
+  }
+
   const features = [
     {
       icon: <BarChart3 />,
@@ -447,13 +455,17 @@ const LandingPage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
-            <PrimaryButton onClick={handleEnterSimulation}>
-              Enter Simulation
+            <PrimaryButton onClick={handleVictimDemo}>
+              👤 Try Victim Experience
               <ArrowRight />
             </PrimaryButton>
-            <SecondaryButton onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>
-              Learn More
-              <BookOpen />
+            <PrimaryButton onClick={handleAffiliateDemo} style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)' }}>
+              💼 Try Affiliate Dashboard
+              <ArrowRight />
+            </PrimaryButton>
+            <SecondaryButton onClick={handleEnterSimulation}>
+              🖥️ Operator Control Center
+              <ArrowRight />
             </SecondaryButton>
           </CTAButtons>
         </HeroSection>
