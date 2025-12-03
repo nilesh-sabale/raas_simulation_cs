@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { ErrorBoundary } from './components/common/ErrorBoundary'
 import { LoadingProvider } from './components/common/LoadingProvider'
 
-// Import pages
+// Pages
 import LandingPage from './pages/Landing/LandingPage'
 import DashboardLayout from './components/layout/DashboardLayout'
 import Dashboard from './pages/Dashboard/Dashboard'
@@ -17,6 +17,10 @@ import Timeline from './pages/Timeline/Timeline'
 import Defense from './pages/Defense/Defense'
 import Settings from './pages/Settings/Settings'
 import NotFound from './pages/NotFound/NotFound'
+
+// Role-specific pages
+import VictimPortal from './pages/VictimPortal/VictimPortal'
+import AffiliateDashboard from './pages/Affiliate/AffiliateDashboard'
 
 const AppContainer = styled.div`
   min-height: 100vh;
@@ -60,10 +64,14 @@ function FullApp() {
                         {/* Landing Page */}
                         <Route path="/" element={<LandingPage />} />
 
+                        {/* Victim Portal - Full screen experience */}
+                        <Route path="/victim-portal" element={<VictimPortal />} />
+
                         {/* Dashboard Routes */}
                         <Route path="/app" element={<DashboardLayout />}>
                             <Route index element={<Dashboard />} />
                             <Route path="dashboard" element={<Dashboard />} />
+                            <Route path="affiliate" element={<AffiliateDashboard />} />
                             <Route path="campaigns" element={<Campaigns />} />
                             <Route path="victims" element={<Victims />} />
                             <Route path="payments" element={<Payments />} />
